@@ -5,7 +5,6 @@ from PyQt5.QtGui import *
 import sys, socket
 from unt import messenger_
 from regWindow import Dialog
-from welcome import MainWindow
 
 class MainDialog(QMainWindow):
     def __init__(self, parent=None):
@@ -39,7 +38,7 @@ class MainDialog(QMainWindow):
         self.password = self.ui.lineEdit_2.text()
 
         if (not self.username) or (not self.password):
-            self.showMessageBox("Заполнены не все поля")
+            self.showMessageBox("Not all fields are filled in")
             return
         else:
             print(self.username + " " + self.password)
@@ -51,11 +50,11 @@ class MainDialog(QMainWindow):
             self.hide()
             self.s.close()
         elif "существует" in self.data:
-            self.showMessageBox('Такого пользователя не существует')
+            self.showMessageBox('There is no such user')
         elif "неверен" in self.data:
-            self.showMessageBox('Неправильный пароль.')
+            self.showMessageBox('Incorrect password')
         else:
-            self.showMessageBox('Неизвестная ошибка')
+            self.showMessageBox('Unknown error')
 
     def signUpCheck(self):
         print("minus")
