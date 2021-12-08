@@ -181,8 +181,8 @@ class messenger_(QMainWindow):
 
     def contextMenuEvent(self, event):
         self.menu = QMenu(self)
-        action = self.menu.addAction("Добавить в друзья")
-        action_1 = self.menu.addAction("press")
+        action = self.menu.addAction("Add to friends")
+        action_1 = self.menu.addAction("*Unassigned action*")
         result = self.menu.exec_(self.mapToGlobal(event.pos()))
         if action == result:
             self.addInGroup(event)
