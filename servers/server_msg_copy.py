@@ -72,7 +72,7 @@ def save_dialog(con, data, conn, nam, m, f, connection, addr):
                         "message:": msg,
                         "image:": image.read()}
 
-            ip_port = f[0][1]
+            ip_port = f[-1][1]
             receiver = connection[ip_port]
             print(receiver)
             print(connection)
