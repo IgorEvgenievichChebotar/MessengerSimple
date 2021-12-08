@@ -1,10 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtGui import QIcon
 
 class Ui_authWindow(object):
     def setupUi(self, authWindow):
         authWindow.setObjectName("authWindow")
         authWindow.resize(400, 300)
+        authWindow.setWindowIcon(QIcon('chat.ico'))
         self.centralwidget = QtWidgets.QWidget(authWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)

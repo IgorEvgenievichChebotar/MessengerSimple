@@ -1,10 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtGui import QIcon
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(500, 700)
+        MainWindow.setWindowIcon(QIcon('chat.ico'))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
@@ -58,9 +59,11 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "chatWindow"))
         self.label_2.setText(_translate("MainWindow", "TextLabel"))
 
         self.pushButton.setText(_translate("MainWindow", "Send message"))

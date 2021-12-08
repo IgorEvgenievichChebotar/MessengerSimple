@@ -2,12 +2,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
 import socket
 from PyQt5.QtCore import *
+from PyQt5.QtGui import QIcon
 import time
 
 class Ui_signUp(object):
     def setupUi(self, signUp):
         signUp.setObjectName("signUp")
         signUp.resize(400, 300)
+        signUp.setWindowIcon(QIcon('chat.ico'))
         self.label_3 = QtWidgets.QLabel(signUp)
         self.label_3.setGeometry(QtCore.QRect(40, 160, 55, 20))
         font = QtGui.QFont()
