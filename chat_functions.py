@@ -1,14 +1,13 @@
+import pickle
+import socket
+import sqlite3
+import threading
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-import socket
-import threading
-from desi import Ui_MainWindow
-import sqlite3
-import pickle
-import time
+
+from chat_window import Ui_MainWindow
 
 
 class messenger_(QMainWindow):

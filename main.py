@@ -1,12 +1,13 @@
-from authWindow import Ui_authWindow
-from PyQt5.QtWidgets import *
+import socket
+import sys
+
 from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-import sys, socket
-from unt import messenger_
-from regWindow import Dialog
-import time
-import threading
+from PyQt5.QtWidgets import *
+
+from auth_window import Ui_authWindow
+from reg_window import Dialog
+from chat_functions import messenger_
+
 
 class MainDialog(QMainWindow):
     def __init__(self, parent=None):
