@@ -34,9 +34,10 @@ class messenger_(QMainWindow):
         self.ui.lineEdit.returnPressed.connect(self.clicked_but)
         self.ui.pushButton_2.clicked.connect(self.changeImage)
 
-        f = open("path_avatarka.log", 'r')
+        path_file = open("path_avatarka.log", 'r')
+        image_dir = path_file.read()
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(f.read()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(image_dir), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.ui.pushButton_2.setIcon(icon)
         self.ui.pushButton_2.setIconSize(QtCore.QSize(100, 100))
 

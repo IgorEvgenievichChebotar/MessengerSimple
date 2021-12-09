@@ -17,26 +17,30 @@ class MainDialog(QMainWindow):
         self.host = '127.0.0.1'
         self.port = 8080
         self.message = b'no'
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.connect((self.host, self.port))
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # creating a TCP/IP socket
+        self.s.connect((self.host, self.port))  # connecting socket to the server
         self.ui.Button_login.clicked.connect(self.loginCheck)
         self.ui.Button_registr.clicked.connect(self.signUpCheck)
 
-    def showMessageBox(self, arg):
+    def showMessageBox(self, arg):  # notification in red text about incorrect input
         _translate = QCoreApplication.translate
         self.ui.label_4.setText(_translate("MainWindow", arg))
         self.ui.label_4.setStyleSheet('color: red')
 
-    def welcomeWindowShow(self, username):
+    def welcomeWindowShow(self, username):  # opening the chat window
         self.main_window = messenger_(self.username)
         self.main_window.show()
 
-    def signUpShow(self):
+    def signUpShow(self):  # opening the auth window
         self.signUpWindow = Dialog(self.s)
         self.signUpWindow.show()
 
-    def loginCheck(self):
-        print("plus")
+    def signUpCheck(self):  # processing the signUp button
+        print("signed up")
+        self.signUpShow()
+
+    def loginCheck(self):  # input validation and input processing (processing the signIn button)
+        print("signed in")
         self.username = self.ui.lineEdit.text()
         self.password = self.ui.lineEdit_2.text()
 
@@ -58,10 +62,6 @@ class MainDialog(QMainWindow):
             self.showMessageBox('Incorrect password')
         else:
             self.showMessageBox('Unknown error')
-
-    def signUpCheck(self):
-        print("minus")
-        self.signUpShow()
 
 
 def main():
