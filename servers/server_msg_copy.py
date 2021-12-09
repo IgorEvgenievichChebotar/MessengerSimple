@@ -2,6 +2,7 @@ import socket
 import threading
 import sqlite3
 import pickle
+import os
 
 
 def accepting(sock, con, connection):
@@ -179,6 +180,25 @@ def receive(conn, sock, addr, con, connection):
         print(connection)
         c.close()
 
+def is_port_open(host, port):
+    """
+    determine whether `host` has the `port` open
+    """
+    # создает новый сокет
+    s = socket.socket()
+    try:
+        # пытается подключиться к хосту через этот порт
+        s.connect((host, port))
+        # сделайте таймаут, если хотите немного быстрее (с меньшей точностью)
+        # s.settimeout(0.2)
+    except:
+        # не могу подключиться, порт закрыт
+        # return false
+        return False
+    else:
+        # соединение установлено, порт открыт!
+        print("Порт открыт")
+        return True
 
 def Main():
     host = '127.0.0.1'
@@ -192,6 +212,7 @@ def Main():
     print("socket is listening")
     thread = threading.Thread(target=accepting, args=(s, con, connection))
     thread.start()
+    print(is_port_open(host, port))
 
 
 if __name__ == '__main__':

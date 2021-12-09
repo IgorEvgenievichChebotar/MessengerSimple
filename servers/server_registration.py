@@ -5,9 +5,8 @@ def registration(data, conn, con, c):
     check = c.execute("""SELECT * From login_data Where login = ?""", (data[2],))
     check = c.fetchone()
     if check is None:
-        pathf = pathlib.Path.cwd().parent.joinpath('path_avatarka.log')
-        print(pathf)
-        path_file = open(pathf, 'r')
+        path_file_dir = pathlib.Path.cwd().parent.joinpath('path_avatarka.log')
+        path_file = open(path_file_dir, 'r')
         image_dir = path_file.read()
         print(image_dir)
         c.execute("INSERT INTO login_data VALUES (?,?,?)", (data[2], data[4], image_dir))
@@ -16,6 +15,7 @@ def registration(data, conn, con, c):
         con.commit()
     else:
         conn.send("Такой пользователь уже существует".encode('utf-8'))
+
 
 
 
