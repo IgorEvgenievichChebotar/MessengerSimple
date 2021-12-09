@@ -5,6 +5,8 @@ from PyQt5.QtGui import *
 import sys, socket
 from unt import messenger_
 from regWindow import Dialog
+import time
+import threading
 
 class MainDialog(QMainWindow):
     def __init__(self, parent=None):

@@ -4,14 +4,17 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import socket
+import threading
 from desi import Ui_MainWindow
 import sqlite3
 import pickle
+import time
 
 
 class messenger_(QMainWindow):
     def __init__(self, username, parent=None):
         super(messenger_, self).__init__(parent)
+
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.con = sqlite3.connect("messages.db", check_same_thread=False)
@@ -24,7 +27,11 @@ class messenger_(QMainWindow):
         self.s.send(("name: " + self.username).encode('utf-8'))
         self.ui.pushButton_2.setMaximumSize(100, 100)
         self.ui.label_2.setText(self.username)
+        self.thread = threading.Thread(target=self.find)
+        self.thread.start()
         self.handler()
+        self.thread_1 = threading.Thread(target=self.receive, args=(self.s, "a"))
+        self.thread_1.start()
         self.ui.lineEdit.returnPressed.connect(self.clicked_but)
         self.ui.pushButton_2.clicked.connect(self.changeImage)
 
@@ -167,6 +174,8 @@ class messenger_(QMainWindow):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((host, port))
         self.sock.send(("name: " + self.username).encode('utf-8'))
+        self.new_thread = threading.Thread(target=self.receiv)
+        self.new_thread.start()
         self.line = self.ui.comboBox.lineEdit()
         self.ui.listWidget.itemClicked.connect(self.listview)
         self.line.returnPressed.connect(self.nado)
@@ -248,6 +257,10 @@ class messenger_(QMainWindow):
                 self.ui.ListWidget.setIconSize(QtCore.QSize(40, 40))
                 self.ui.ListWidget.addItem(add_msg)
         print(self.item)
+
+    def closeEvent(self, event):
+        self.hide()
+        sys.exit()
 
 
 if __name__ == "__main__":
