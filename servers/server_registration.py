@@ -1,4 +1,4 @@
-import socket, threading, sqlite3, os
+import socket, threading, sqlite3
 import pathlib
 
 def registration(data, conn, con, c):

@@ -3,7 +3,6 @@ from PyQt5.Qt import *
 import socket
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QIcon
-import time
 
 class Ui_signUp(object):
     def setupUi(self, signUp):
@@ -81,24 +80,24 @@ class Dialog(QDialog):
         self.message = b'no'
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((self.host, self.port))
-        self.ui.signup_btn.clicked.connect(self.insertData)
-    def showMessageBox(self,arg):
+        self.ui.signup_btn.clicked.connect(self.insert_data)
+    def show_message_box(self,arg):
         _translate = QCoreApplication.translate
         self.ui.label_4.setText(_translate("MainWindow", arg))
         self.ui.label_4.setStyleSheet('color: red')
-    def insertData(self):
+    def insert_data(self):
         username = self.ui.uname_lineEdit.text()
         password = self.ui.password_lineEdit.text()
         if (not username) or (not password):
             self.ui.label_4.setGeometry(QRect(10, 70, 381, 20))
-            msg = self.showMessageBox('Вы заполнили не все поля')
+            msg = self.show_message_box('Вы заполнили не все поля')
             return
         self.s.send(("reg " + " name: " + username + " password: " + password).encode('utf-8'))
         if "Зарегистрирован" in self.s.recv(1024).decode('utf-8').split() :
             self.hide()
         else:
             self.ui.label_4.setGeometry(QRect(10, 70, 381, 20))
-            msg = self.showMessageBox('Пользоватеть с таким именем уже зарегистрирован')
+            msg = self.show_message_box('Пользоватеть с таким именем уже зарегистрирован')
 
 if __name__ == "__main__":
     import sys

@@ -2,6 +2,7 @@ import pickle
 import socket
 import sqlite3
 import threading
+import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
@@ -32,7 +33,7 @@ class messenger_(QMainWindow):
         self.thread_1 = threading.Thread(target=self.receive, args=(self.s, "a"))
         self.thread_1.start()
         self.ui.lineEdit.returnPressed.connect(self.clicked_but)
-        self.ui.pushButton_2.clicked.connect(self.changeImage)
+        self.ui.pushButton_2.clicked.connect(self.change_image)
 
         path_file = open("path_avatarka.log", 'r')
         image_dir = path_file.read()
@@ -41,8 +42,7 @@ class messenger_(QMainWindow):
         self.ui.pushButton_2.setIcon(icon)
         self.ui.pushButton_2.setIconSize(QtCore.QSize(100, 100))
 
-
-    def changeImage(self):
+    def change_image(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
         print(fname)
         if fname:
@@ -154,7 +154,7 @@ class messenger_(QMainWindow):
             add_msg.setIcon(icon)
             add_msg.setText(self.message)
             self.ui.ListWidget.addItem(add_msg)
-            #self.item = self.ui.listWidget.currentItem()
+            # self.item = self.ui.listWidget.currentItem()
             if self.item:
                 self.c.execute("""INSERT INTO""" + '"' + self.item + '"' + """VALUES (?,?)""",
                                (self.username, self.message,))
@@ -180,20 +180,20 @@ class messenger_(QMainWindow):
         self.ui.listWidget.itemClicked.connect(self.listview)
         self.line.returnPressed.connect(self.nado)
 
-    def addInGroup(self, event):
+    def add_in_group(self, event):
         self.menu_1 = QMenu(self)
         self.ui.listWidget.setSelectionMode(QAbstractItemView.MultiSelection)
         for x in range(0, self.ui.listWidget.count()):
             action = self.menu_1.addAction(self.ui.listWidget.item(x).text())
         result = self.menu_1.exec_(self.mapToGlobal(event.pos()))
 
-    def contextMenuEvent(self, event):
+    def context_menu_event(self, event):
         self.menu = QMenu(self)
         action = self.menu.addAction("Add to friends")
         action_1 = self.menu.addAction("*Unassigned action*")
         result = self.menu.exec_(self.mapToGlobal(event.pos()))
         if action == result:
-            self.addInGroup(event)
+            self.add_in_group(event)
         elif action_1 == result:
             print("press")
 
@@ -203,7 +203,7 @@ class messenger_(QMainWindow):
         self.ui.comboBox.hidePopup()
         self.ui.comboBox.clear()
         # self.ui.listWidget.takeItem(self.ui.listWidget.selectedItems()[0])
-        self.ui.comboBox.activated.connect(self.pressedKeys)
+        self.ui.comboBox.activated.connect(self.pressed_keys)
 
     def get_key(self, d):
         for item in d.items():
@@ -223,7 +223,7 @@ class messenger_(QMainWindow):
             if self.dataa:
                 self.get_key((self.dataa))
 
-    def pressedKeys(self):
+    def pressed_keys(self):
         self.ui.listWidget.setIconSize(QtCore.QSize(40, 40))
         self.current_item = self.ui.comboBox.currentText()
         print(self.current_item)
@@ -233,7 +233,7 @@ class messenger_(QMainWindow):
         item.setIcon(icon)
         item.setText(self.current_item)
         self.ui.listWidget.addItem(item)
-        self.ui.comboBox.activated.disconnect(self.pressedKeys)
+        self.ui.comboBox.activated.disconnect(self.pressed_keys)
 
     def listview(self):
         self.ui.ListWidget.clear()
@@ -264,8 +264,6 @@ class messenger_(QMainWindow):
 
 
 if __name__ == "__main__":
-    import sys
-
     app = QApplication(sys.argv)
     w = messenger_()
     w.show()
