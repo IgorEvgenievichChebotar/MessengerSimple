@@ -2,6 +2,18 @@ import sqlite3
 import socket
 import threading
 import pickle
+import time
+
+
+def join_clients(sock, users, con, c):
+    print("the _join_clients_ function has now started working")
+    while True:
+        conn, addr = sock.accept()
+        print('Connected to :', addr[0], ':', addr[1])
+        thread_1 = threading.Thread(target=receive, args=(conn, addr, users, con, c))
+        thread_1.start()
+        thread_2 = threading.Thread(target=check_status, args=(conn, addr, users, con, c))
+        thread_2.start()
 
 
 def find(conn, c, data):
@@ -20,15 +32,6 @@ def find(conn, c, data):
     conn.send(lis)
 
 
-def join_clients(sock, users, con, c):
-    print("the _join_clients_ function has now started working")
-    while True:
-        conn, addr = sock.accept()
-        print('Connected to :', addr[0], ':', addr[1])
-        thread_1 = threading.Thread(target=receive, args=(conn, addr, users, con, c))
-        thread_1.start()
-
-
 def receive(conn, addr, users, con, c):
     print("the _receive_ function has now started working")
     while True:
@@ -39,6 +42,14 @@ def receive(conn, addr, users, con, c):
             break
         else:
             threading.Thread(target=find, args=(conn, c, data)).start()
+
+
+def check_status(conn, addr, users, con, c):
+    print("the _check_status_ function has now started working")
+    while True:
+        time.sleep(1)
+        print(str(addr[0]) + ' : ' + str(addr[1]))
+        break
 
 
 def Main():

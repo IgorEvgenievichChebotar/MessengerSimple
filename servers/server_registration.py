@@ -1,6 +1,16 @@
 import socket, threading, sqlite3
 import pathlib
 
+
+def join_clients(sock, a, users, con, c):
+    print("the _join_clients_ function has now started working")
+    while True:
+        conn, addr = sock.accept()
+        print('Connected to :', addr[0], ':', addr[1])
+        thread_1 = threading.Thread(target=receive, args=(conn, "helo", addr, users, con, c))
+        thread_1.start()
+
+
 def registration(data, conn, con, c):
     print("the _registration_ function has now started working")
     check = c.execute("""SELECT * From login_data Where login = ?""", (data[2],))
@@ -32,15 +42,6 @@ def login(data, conn, con, c):
             conn.send("Пароль неверен".encode('utf-8'))
     else:
         conn.send("Такого пользователя не существует".encode('utf-8'))
-
-
-def join_clients(sock, a, users, con, c):
-    print("the _join_clients_ function has now started working")
-    while True:
-        conn, addr = sock.accept()
-        print('Connected to :', addr[0], ':', addr[1])
-        thread_1 = threading.Thread(target=receive, args=(conn, "helo", addr, users, con, c))
-        thread_1.start()
 
 
 def receive(conn, a, addr, users, con, c):
