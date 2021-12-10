@@ -2,7 +2,6 @@ import pickle
 import socket
 import sqlite3
 import threading
-import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
@@ -264,6 +263,7 @@ class messenger_(QMainWindow):
 
 
 if __name__ == "__main__":
+    import sys
     app = QApplication(sys.argv)
     w = messenger_()
     w.show()
