@@ -5,10 +5,9 @@ import pickle
 
 
 def find(conn, c, data):
-    print(data)
+    print("the _find_ function has now started working")
     c.execute("SELECT login, link FROM login_data Where login Like ? ", ('%' + data + '%',))
     f = c.fetchall()
-    print(f)
     lis = ""
     py = {}
     if f is not None:
@@ -16,15 +15,13 @@ def find(conn, c, data):
             a = f[x]
             b = a[0]
             image = open(a[1], "rb")
-            print("a[1] = ", a[1])
-            print("image = ", image)
             py[b] = image.read()
         lis = pickle.dumps(py)
-        print(lis)
     conn.send(lis)
 
 
 def join_clients(sock, users, con, c):
+    print("the _join_clients_ function has now started working")
     while True:
         conn, addr = sock.accept()
         print('Connected to :', addr[0], ':', addr[1])
@@ -33,6 +30,7 @@ def join_clients(sock, users, con, c):
 
 
 def receive(conn, addr, users, con, c):
+    print("the _receive_ function has now started working")
     while True:
         data = conn.recv(4096).decode('utf-8')
         users[addr] = conn

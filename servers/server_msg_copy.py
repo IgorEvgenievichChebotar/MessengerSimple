@@ -5,21 +5,17 @@ import pickle
 import time
 
 
-def accepting(sock, con, connection):
-    try:
-
-        while True:
-            conn, addr = sock.accept()
-            print('Connected to :', addr[0], ':', addr[1])
-            thread_1 = threading.Thread(target=receive, args=(conn, sock, addr, con, connection))
-            thread_1.start()
-
-    except socket.error:
-
-        print("NO")
+def join_clients(sock, con, connection):
+    print("the _join_clients_ function has now started working")
+    while True:
+        conn, addr = sock.accept()
+        print('Connected to :', addr[0], ':', addr[1])
+        thread_1 = threading.Thread(target=receive, args=(conn, sock, addr, con, connection))
+        thread_1.start()
 
 
 def save_dialog(con, data, conn, nam, m, f, connection, addr):
+    print("the _save_dialog_ function has now started working")
     c = con.cursor()
     c.execute("""SELECT name FROM base_connection WHERE address = ?""", ((str(addr[0]) + '_' + str(addr[1])),))
     name = c.fetchone()[0]
@@ -28,21 +24,15 @@ def save_dialog(con, data, conn, nam, m, f, connection, addr):
     tables = c.fetchall()
 
     table = ''
-    print(name, nam)
     for x in tables:
-        print(x)
-        print(x[1])
-        print((x[1]).split("_"))
         if nam in (x[1]).split("_"):
             if name in (x[1]).split("_"):
                 table = x[1]
-                print(table)
                 break
             else:
                 table = ''
         else:
             table = ''
-    print(table)
     if table == '':
         c.execute(
             """CREATE TABLE IF NOT EXISTS """ + "'" + name + '_' + nam + "'" + """(sender TEXT, receiver TEXT, message TEXT, status TEXT)""")
@@ -51,17 +41,13 @@ def save_dialog(con, data, conn, nam, m, f, connection, addr):
     else:
         c.execute("""SELECT * FROM base_connection WHERE name = ?""", (nam,))
         f = c.fetchall()
-        print(f)
         c.execute("""SELECT * from sqlite_master where type = 'table'""")
-        print(c.fetchall())
-        print(table)
-        if f:
-            print(connection)
+        if f:  # executing when both are online
             message = data[m + 1:]
             msg = ' '.join(message)
             print((str(addr[0]) + '_' + str(addr[1])))
             c.execute("""INSERT INTO """ + '{0}'.format("'" + table + "'") + """ Values (?,?,?,?)""",
-                      (str(name), str(nam), str(msg), "1"), )  # '"' + name + '_' + nam + '"'
+                      (str(name), str(nam), str(msg), "1"), )
             print(msg)
             c.execute("""SELECT * FROM base_connection WHERE address = ?""", ((str(addr[0]) + '_' + str(addr[1])),))
             sender = c.fetchall()[0][0]
@@ -77,27 +63,35 @@ def save_dialog(con, data, conn, nam, m, f, connection, addr):
             receiver = connection[ip_port]
             print(receiver)
             print(connection)
-            print(f[0][1])
+            print(f[-1][1])
             receiver.send(pickle.dumps(messages))
             print(sender + " message: " + msg)
             print("send")
             c.close()
-        else:
+        else:  # executing when receiver are offline
 
             th = threading.Thread(target=checking_user,
                                   args=(nam, con, data, conn, name, message, m, connection, addr, table))
             th.start()
 
 
-def checking_user(nam, con, data, conn, name, message, m, connection, addr, table):
+def checking_user(nam, con, data, conn, name, message, m, connection, addr, table):  # checks if the user exists when he is offline
+    print("the _checking_user_ function has now started working")
     st = True
     while st:
 
         c = con.cursor()
         c.execute("""SELECT * FROM base_connection WHERE name = ?""", (nam,))
         f = c.fetchall()
+        f_rowcount = len(f)  # number of lines
 
-        if f:
+        print("f: ", f)
+        print("rowcount: ", f_rowcount)
+        time.sleep(1)
+
+        if f:  # starts when the receiver is connected
+            print("f statement is running")
+            print("the receiver is online at this moment")
             print(connection)
             message = data[m + 1:]
             msg = ' '.join(message)
@@ -105,8 +99,6 @@ def checking_user(nam, con, data, conn, name, message, m, connection, addr, tabl
 
             c.execute("""INSERT INTO {0} Values (?,?,?,?)""".format('{0}'.format('"' + table + '"')),
                       (str(name), str(nam), str(msg), "1"), )
-
-            print(f[0][1])
 
             print(msg)
             c.execute("""SELECT * FROM base_connection WHERE address = ?""", ((str(addr[0]) + '_' + str(addr[1])),))
@@ -130,24 +122,26 @@ def checking_user(nam, con, data, conn, name, message, m, connection, addr, tabl
                 break
             except:
                 checking_user(nam, con, data, conn, name, message, m, connection, addr, table)
+        else:  # starts until the receiver goes connected
+            print("the receiver is offline at this moment")
+            save_dialog(con, data, conn, nam, m, f, connection, addr)
+            break
 
 
 def receive(conn, sock, addr, con, connection):
+    print("the _receive_ function has now started working")
     try:
 
         while True:
 
             data = conn.recv(40960000).decode('utf-8').split()
-            print(data)
             if 'name:' in data:
                 c = con.cursor()
                 name = " ".join(data[1:])
                 c.execute("""INSERT INTO base_connection VALUES (?,?)""", (name, (str(addr[0]) + '_' + str(addr[1])),))
                 con.commit()
                 ip_port = ('{0}_{1}'.format(str(addr[0]), str(addr[1])))
-                print(ip_port)
                 connection[ip_port] = conn
-                print(connection)
                 c.close()
 
             elif not data:
@@ -159,25 +153,21 @@ def receive(conn, sock, addr, con, connection):
 
                 if len(data) > 3:
                     c = con.cursor()
-                    print(data)
                     m = data.index('message:')
-                    print(m)
                     nam = " ".join(data[data.index('receiver:') + 1:m])
-                    print(nam)
                     c.execute("""SELECT * FROM base_connection WHERE name = ?""", (nam,))
                     f = c.fetchall()
-                    print(f)
                     c.close()
-                    print(connection)
                     threading.Thread(target=save_dialog, args=(con, data, conn, nam, m, f, connection, addr)).start()
 
     except socket.error:
         c = con.cursor()
-        print("NO")
+        print("socket_error")
         c.execute("""DELETE FROM base_connection WHERE address = ?""", ((str(addr[0]) + '_' + str(addr[1])),))
         con.commit()
         connection.pop((str(addr[0]) + '_' + str(addr[1])))
-        print(connection)
+        print("connection: ", connection, " losted")
+
         c.close()
 
 '''
@@ -213,7 +203,7 @@ def Main():
     print("socket binded to port", port)
     s.listen(5)
     print("socket is listening")
-    thread = threading.Thread(target=accepting, args=(s, con, connection))
+    thread = threading.Thread(target=join_clients, args=(s, con, connection))
     thread.start()
 
 
