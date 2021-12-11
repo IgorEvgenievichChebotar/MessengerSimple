@@ -61,12 +61,12 @@ class Ui_chatWindow(object):
         font.setKerning(True)
         font.setStyleStrategy(QtGui.QFont.PreferAntialias)
         self.gridLayout_4.addWidget(self.ListWidget, 0, 0, 1, 1)
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setObjectName("pushButton")
+        self.send_msg_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.send_msg_btn.setObjectName("send_msg_btn")
         font = QtGui.QFont()
         font.setFamily("Segoe UI Variable")
-        self.pushButton.setFont(font)
-        self.gridLayout_4.addWidget(self.pushButton, 2, 0, 1, 1)
+        self.send_msg_btn.setFont(font)
+        self.gridLayout_4.addWidget(self.send_msg_btn, 2, 0, 1, 1)
         self.gridLayout.addLayout(self.gridLayout_4, 2, 0, 1, 1)
 
         chatWindow.setCentralWidget(self.centralwidget)
@@ -79,4 +79,4 @@ class Ui_chatWindow(object):
         chatWindow.setWindowTitle(_translate("chatWindow", "chatWindow"))
         self.my_login_label.setText(_translate("chatWindow", "TextLabel"))
 
-        self.pushButton.setText(_translate("chatWindow", "Send message"))
+        self.send_msg_btn.setText(_translate("chatWindow", "Send message"))

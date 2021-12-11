@@ -1,5 +1,7 @@
-import socket, threading, sqlite3
 import pathlib
+import socket
+import sqlite3
+import threading
 
 
 def join_clients(sock, a, users, con, c):

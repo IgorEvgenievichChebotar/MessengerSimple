@@ -21,16 +21,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="0" colspan="2">
-     <widget class="QListWidget" name="friends_list">
-      <property name="minimumSize">
-       <size>
-        <width>200</width>
-        <height>300</height>
-       </size>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0" rowspan="2">
      <widget class="QPushButton" name="my_image_btn">
       <property name="sizePolicy">
@@ -64,49 +54,13 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QLabel" name="my_login">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <family>Segoe UI Variable</family>
-       </font>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0" colspan="2">
-     <widget class="QComboBox" name="comboBox">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
+    <item row="2" column="0" colspan="2">
+     <widget class="QListWidget" name="friends_list">
       <property name="minimumSize">
        <size>
         <width>200</width>
-        <height>25</height>
+        <height>300</height>
        </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="autoFillBackground">
-       <bool>false</bool>
-      </property>
-      <property name="editable">
-       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -143,6 +97,44 @@
       </property>
      </widget>
     </item>
+    <item row="2" column="2" colspan="3">
+     <widget class="QListWidget" name="msg_list">
+      <property name="minimumSize">
+       <size>
+        <width>400</width>
+        <height>300</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" colspan="2">
+     <widget class="QComboBox" name="friends_comboBox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>200</width>
+        <height>25</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="editable">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="3">
      <widget class="QLabel" name="friend_activity">
       <property name="font">
@@ -155,16 +147,6 @@
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="2" colspan="3">
-     <widget class="QListWidget" name="msg_list">
-      <property name="minimumSize">
-       <size>
-        <width>400</width>
-        <height>300</height>
-       </size>
       </property>
      </widget>
     </item>
@@ -201,29 +183,8 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="2">
-     <widget class="QLabel" name="friend_login">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <family>Segoe UI Variable</family>
-       </font>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
     <item row="3" column="2" colspan="3">
-     <widget class="QLineEdit" name="lineEdit">
+     <widget class="QLineEdit" name="msg_lineEdit">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -241,6 +202,21 @@
         <width>16777215</width>
         <height>50</height>
        </size>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLabel" name="my_activity">
+      <property name="font">
+       <font>
+        <family>Segoe UI Variable</family>
+       </font>
+      </property>
+      <property name="text">
+       <string>Онлайн</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -277,34 +253,58 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QLabel" name="my_activity">
+    <item row="0" column="3">
+     <widget class="QLabel" name="friend_login_label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="font">
        <font>
         <family>Segoe UI Variable</family>
        </font>
       </property>
       <property name="text">
-       <string>Онлайн</string>
+       <string/>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1" colspan="2">
+     <widget class="QLabel" name="my_login_label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI Variable</family>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </item>
    </layout>
-   <zorder>comboBox</zorder>
+   <zorder>friends_comboBox</zorder>
    <zorder>my_image_btn</zorder>
    <zorder>find_friends_btn</zorder>
    <zorder>friends_list</zorder>
-   <zorder>my_login</zorder>
-   <zorder>friend_login</zorder>
+   <zorder>my_login_label</zorder>
    <zorder>msg_list</zorder>
    <zorder>send_msg_btn</zorder>
-   <zorder>lineEdit</zorder>
+   <zorder>msg_lineEdit</zorder>
    <zorder>my_activity</zorder>
    <zorder>friend_activity</zorder>
    <zorder>friend_image</zorder>
+   <zorder>friend_login_label</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

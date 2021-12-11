@@ -76,7 +76,7 @@ class messenger_(QMainWindow):
             self.ui.my_image_btn.setIconSize(QtCore.QSize(100, 100))
 
     def handler(self):
-        self.ui.pushButton.clicked.connect(self.clicked_but)
+        self.ui.send_msg_btn.clicked.connect(self.clicked_but)
 
     def receive(self, s, a):
         while True:
