@@ -5,15 +5,13 @@ import pickle
 import time
 
 
-def join_clients(sock, users, con, c):
+def join_clients(sock, users, c):
     print("the _join_clients_ function has now started working")
     while True:
         conn, addr = sock.accept()
         print('Connected to :', addr[0], ':', addr[1])
-        thread_1 = threading.Thread(target=receive, args=(conn, addr, users, con, c))
+        thread_1 = threading.Thread(target=receive, args=(conn, addr, users, c))
         thread_1.start()
-        thread_2 = threading.Thread(target=check_status, args=(conn, addr, users, con, c))
-        thread_2.start()
 
 
 def find(conn, c, data):
@@ -32,24 +30,31 @@ def find(conn, c, data):
     conn.send(lis)
 
 
-def receive(conn, addr, users, con, c):
+def receive(conn, addr, users, c):
     print("the _receive_ function has now started working")
     while True:
-        data = conn.recv(4096).decode('utf-8')
-        users[addr] = conn
-        if not data:
-            print("NO")
+        try:
+            data = conn.recv(4096).decode('utf-8')
+            print(str(addr[0]) + ' : ' + str(addr[1]), " is online")
+            users[addr] = conn
+            if not data:
+                print("data empty")
+                break
+            else:
+                threading.Thread(target=find, args=(conn, c, data)).start()
+        except:
+            print("connection " + str(addr[0]) + ' : ' + str(addr[1]) + " losted")
             break
-        else:
-            threading.Thread(target=find, args=(conn, c, data)).start()
 
 
-def check_status(conn, addr, users, con, c):
+
+def check_status(conn, addr):
     print("the _check_status_ function has now started working")
-    while True:
-        time.sleep(1)
-        print(str(addr[0]) + ' : ' + str(addr[1]))
-        break
+    try:
+        conn.recv(4096).decode('utf-8')
+        print(str(addr[0]) + ' : ' + str(addr[1]), " is online")
+    except:
+        print("connection " + str(addr[0]) + ' : ' + str(addr[1]) + " losted")
 
 
 def Main():
@@ -63,7 +68,7 @@ def Main():
     print("socket binded to port", port)
     s.listen(10)
     print("socket is listening")
-    thread = threading.Thread(target=join_clients, args=(s, users, con, c))
+    thread = threading.Thread(target=join_clients, args=(s, users, c))
     thread.start()
 
 
