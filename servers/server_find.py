@@ -1,8 +1,11 @@
-import sqlite3
-import socket
-import threading
 import pickle
-import time
+import socket
+import sqlite3
+import threading
+
+from colorama import init, Fore
+
+init(autoreset=True)
 
 
 def join_clients(sock, users, c):
@@ -35,7 +38,9 @@ def receive(conn, addr, users, c):
     while True:
         try:
             data = conn.recv(4096).decode('utf-8')
-            print(str(addr[0]) + ' : ' + str(addr[1]), " is online")
+
+            print(Fore.GREEN + (str(addr[0]) + ' : ' + str(addr[1]) + " is online"))
+
             users[addr] = conn
             if not data:
                 print("data empty")
@@ -43,18 +48,10 @@ def receive(conn, addr, users, c):
             else:
                 threading.Thread(target=find, args=(conn, c, data)).start()
         except:
-            print("connection " + str(addr[0]) + ' : ' + str(addr[1]) + " losted")
+
+            print(Fore.RED + (str(addr[0]) + ' : ' + str(addr[1]) + " is offline"))
+
             break
-
-
-
-def check_status(conn, addr):
-    print("the _check_status_ function has now started working")
-    try:
-        conn.recv(4096).decode('utf-8')
-        print(str(addr[0]) + ' : ' + str(addr[1]), " is online")
-    except:
-        print("connection " + str(addr[0]) + ' : ' + str(addr[1]) + " losted")
 
 
 def Main():

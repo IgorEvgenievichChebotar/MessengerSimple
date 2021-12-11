@@ -2,27 +2,27 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(500, 700)
-        MainWindow.setWindowIcon(QIcon('chat.ico'))
+class Ui_chatWindow(object):
+    def setupUi(self, chatWindow):
+        chatWindow.setObjectName("chatWindow")
+        chatWindow.resize(500, 700)
+        chatWindow.setWindowIcon(QIcon('chat.ico'))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Variable")
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget = QtWidgets.QWidget(chatWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
         self.gridLayout_2 = QtWidgets.QGridLayout()
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.gridLayout_2.addWidget(self.pushButton_2, 0, 0, 1, 1)
-        self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setObjectName("label_2")
+        self.my_image_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.gridLayout_2.addWidget(self.my_image_btn, 0, 0, 1, 1)
+        self.my_login_label = QtWidgets.QLabel(self.centralwidget)
+        self.my_login_label.setObjectName("my_login_label")
         font = QtGui.QFont()
         font.setFamily("Segoe UI Variable")
-        self.label_2.setFont(font)
-        self.gridLayout_2.addWidget(self.label_2, 0, 1, 1, 1)
+        self.my_login_label.setFont(font)
+        self.gridLayout_2.addWidget(self.my_login_label, 0, 1, 1, 1)
         self.gridLayout.addLayout(self.gridLayout_2, 1, 0, 1, 1)
         self.gridLayout_5 = QtWidgets.QGridLayout()
         self.gridLayout_5.setObjectName("gridLayout_5")
@@ -69,14 +69,14 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.pushButton, 2, 0, 1, 1)
         self.gridLayout.addLayout(self.gridLayout_4, 2, 0, 1, 1)
 
-        MainWindow.setCentralWidget(self.centralwidget)
+        chatWindow.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.retranslateUi(chatWindow)
+        QtCore.QMetaObject.connectSlotsByName(chatWindow)
 
-    def retranslateUi(self, MainWindow):
+    def retranslateUi(self, chatWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "chatWindow"))
-        self.label_2.setText(_translate("MainWindow", "TextLabel"))
+        chatWindow.setWindowTitle(_translate("chatWindow", "chatWindow"))
+        self.my_login_label.setText(_translate("chatWindow", "TextLabel"))
 
-        self.pushButton.setText(_translate("MainWindow", "Send message"))
+        self.pushButton.setText(_translate("chatWindow", "Send message"))

@@ -7,14 +7,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
 from PyQt5.QtWidgets import *
 
-from chat_window import Ui_MainWindow
+from chat_window import Ui_chatWindow
 
 
 class messenger_(QMainWindow):
     def __init__(self, username, parent=None):
         super(messenger_, self).__init__(parent)
 
-        self.ui = Ui_MainWindow()
+        self.ui = Ui_chatWindow()
         self.ui.setupUi(self)
         self.con = sqlite3.connect("messages.db", check_same_thread=False)
         self.c = self.con.cursor()
@@ -24,28 +24,28 @@ class messenger_(QMainWindow):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((self.host, self.port))
         self.s.send(("name: " + self.username).encode('utf-8'))
-        self.ui.pushButton_2.setMaximumSize(100, 100)
-        self.ui.label_2.setText(self.username)
+        self.ui.my_image_btn.setMaximumSize(100, 100)
+        self.ui.my_login_label.setText(self.username)
         self.thread = threading.Thread(target=self.find)
         self.thread.start()
         self.handler()
         self.thread_1 = threading.Thread(target=self.receive, args=(self.s, "a"))
         self.thread_1.start()
         self.ui.lineEdit.returnPressed.connect(self.clicked_but)
-        self.ui.pushButton_2.clicked.connect(self.change_image)
+        self.ui.my_image_btn.clicked.connect(self.change_image)
 
         path_file = open("path_avatarka.log", 'r')
         image_dir = path_file.read()
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(image_dir), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.ui.pushButton_2.setIcon(icon)
-        self.ui.pushButton_2.setIconSize(QtCore.QSize(100, 100))
+        self.ui.my_image_btn.setIcon(icon)
+        self.ui.my_image_btn.setIconSize(QtCore.QSize(100, 100))
 
     def change_image(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
         print(fname)
         if fname:
-            self.ui.pushButton_2.setStyleSheet("QPushButton{\n"
+            self.ui.my_image_btn.setStyleSheet("QPushButton{\n"
                                                "  display: block;\n"
                                                "  box-sizing: border-box;\n"
                                                "  margin: 0 auto;\n"
@@ -63,8 +63,8 @@ class messenger_(QMainWindow):
                                                "}")
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(fname), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.ui.pushButton_2.setIcon(icon)
-            self.ui.pushButton_2.setIconSize(QtCore.QSize(100, 100))
+            self.ui.my_image_btn.setIcon(icon)
+            self.ui.my_image_btn.setIconSize(QtCore.QSize(100, 100))
             f = open("path_avatarka.log", 'w')
             f.write(fname)
             f.close()
@@ -72,8 +72,8 @@ class messenger_(QMainWindow):
             f = open("path_avatarka.log", 'r')
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(f.read()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.ui.pushButton_2.setIcon(icon)
-            self.ui.pushButton_2.setIconSize(QtCore.QSize(100, 100))
+            self.ui.my_image_btn.setIcon(icon)
+            self.ui.my_image_btn.setIconSize(QtCore.QSize(100, 100))
 
     def handler(self):
         self.ui.pushButton.clicked.connect(self.clicked_but)
