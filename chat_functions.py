@@ -7,7 +7,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
 from PyQt5.QtWidgets import *
 
-from NEWchat_window import Ui_chatWindow
+from chat_window import Ui_chatWindow
 
 
 class messenger_(QMainWindow):
@@ -181,7 +181,7 @@ class messenger_(QMainWindow):
         self.new_thread = threading.Thread(target=self.receiv)
         self.new_thread.start()
         self.line = self.ui.friends_comboBox.lineEdit()
-        self.ui.friends_list.itemClicked.connect(self.listview)
+        self.ui.friends_list.itemClicked.connect(self.msg_list)
         self.line.returnPressed.connect(self.nado)
 
     def add_in_group(self, event):
@@ -225,19 +225,13 @@ class messenger_(QMainWindow):
 
     def receiv(self):
         print("the _receiv_ function has now started working")
-        print("1")
+
         while True:
-            print("2")
             self.dataa = self.sock.recv(40960000)  # .decode('utf-8').split(",")
-            print("3")
             self.dataa = pickle.loads(self.dataa)
-            print("4")
             print(self.dataa)
-            print("5")
             if self.dataa:
-                print("6")
                 self.get_key((self.dataa))
-                print("7")
 
     def pressed_keys(self):
         print("the _pressed_keys_ function has now started working")
@@ -252,8 +246,8 @@ class messenger_(QMainWindow):
         self.ui.friends_list.addItem(item)
         self.ui.friends_comboBox.activated.disconnect(self.pressed_keys)
 
-    def listview(self):
-        print("the _listview_ function has now started working")
+    def msg_list(self):
+        print("the _msg_list_ function has now started working")
         self.ui.msg_list.clear()
         brush = QtGui.QBrush(QtGui.QColor(255, 225, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -274,7 +268,9 @@ class messenger_(QMainWindow):
                 add_msg.setText(mess)
                 self.ui.msg_list.setIconSize(QtCore.QSize(40, 40))
                 self.ui.msg_list.addItem(add_msg)
-        print(self.item)
+                self.ui.friend_login_label.setText(self.item)
+                self.ui.friend_activity.setText("STATUS")
+                self.ui.friend_activity.setStyleSheet('color: red')
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")
