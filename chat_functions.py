@@ -7,7 +7,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
 from PyQt5.QtWidgets import *
 
-from chat_window import Ui_chatWindow
+from NEWchat_window import Ui_chatWindow
 
 
 class messenger_(QMainWindow):
@@ -42,6 +42,7 @@ class messenger_(QMainWindow):
         self.ui.my_image_btn.setIconSize(QtCore.QSize(100, 100))
 
     def change_image(self):
+        print("the _change_image_ function has now started working")
         fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
         print(fname)
         if fname:
@@ -76,9 +77,11 @@ class messenger_(QMainWindow):
             self.ui.my_image_btn.setIconSize(QtCore.QSize(100, 100))
 
     def handler(self):
+        print("the _handler_ function has now started working")
         self.ui.send_msg_btn.clicked.connect(self.clicked_but)
 
     def receive(self, s, a):
+        print("the _handler_ function has now started working")
         while True:
             self.data = self.s.recv(40960000)
             data = pickle.loads(self.data)
@@ -90,11 +93,11 @@ class messenger_(QMainWindow):
             self.c.execute("""INSERT INTO""" + '"' + sender + '"' + """VALUES (?,?)""", (sender, message_,))
             self.con.commit()
             print("sender", sender, message_)
-            # self.ui.listWidget.setIconSize(QtCore.QSize(60, 60))
+            # self.ui.friends_list.setIconSize(QtCore.QSize(60, 60))
             # _translate = QtCore.QCoreApplication.translate
-            if self.ui.listWidget.count() > 0:
-                for x in range(0, self.ui.listWidget.count()):
-                    cur_item = (self.ui.listWidget.item(x))
+            if self.ui.friends_list.count() > 0:
+                for x in range(0, self.ui.friends_list.count()):
+                    cur_item = (self.ui.friends_list.item(x))
                     print(str(cur_item.text()), str(sender))
                     if cur_item.text() == sender:
                         brush = QtGui.QBrush(QtGui.QColor(166, 226, 43))
@@ -112,11 +115,11 @@ class messenger_(QMainWindow):
                     icon.addPixmap(QtGui.QPixmap(sender + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                     item.setIcon(icon)
                     item.setText(sender)
-                    self.ui.listWidget.addItem(item)
+                    self.ui.friends_list.addItem(item)
                     brush = QtGui.QBrush(QtGui.QColor(166, 226, 43))
                     brush.setStyle(QtCore.Qt.SolidPattern)
-                    print(str(self.ui.listWidget.count()))
-                    itemm = self.ui.listWidget.item(self.ui.listWidget.count() - 1)
+                    print(str(self.ui.friends_list.count()))
+                    itemm = self.ui.friends_list.item(self.ui.friends_list.count() - 1)
                     print(str(itemm))
                     if itemm:
                         itemm.setBackground(brush)
@@ -132,16 +135,17 @@ class messenger_(QMainWindow):
                 icon.addPixmap(QtGui.QPixmap(sender + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 item.setIcon(icon)
                 item.setText(sender)
-                self.ui.listWidget.addItem(item)
+                self.ui.friends_list.addItem(item)
                 brush = QtGui.QBrush(QtGui.QColor(166, 226, 43))
                 brush.setStyle(QtCore.Qt.SolidPattern)
-                itemm = self.ui.listWidget.item(0)
+                itemm = self.ui.friends_list.item(0)
                 itemm.setBackground(brush)
                 print(itemm.text())
             # self.guest_message = str('Received from ' + sender +': '+ message_)
             # self.ui.plainTextEdit.appendPlainText(self.guest_message)
 
     def clicked_but(self):
+        print("the _clicked_but_ function has now started working")
         self.msg = self.ui.lineEdit.text().split()
         if self.msg:
             print(self.msg)
@@ -153,7 +157,7 @@ class messenger_(QMainWindow):
             add_msg.setIcon(icon)
             add_msg.setText(self.message)
             self.ui.msg_list.addItem(add_msg)
-            # self.item = self.ui.listWidget.currentItem()
+            # self.item = self.ui.friends_list.currentItem()
             if self.item:
                 self.c.execute("""INSERT INTO""" + '"' + self.item + '"' + """VALUES (?,?)""",
                                (self.username, self.message,))
@@ -168,6 +172,7 @@ class messenger_(QMainWindow):
             print("Пустое")
 
     def find(self):
+        print("the _find_ function has now started working")
         host = '127.0.0.1'
         port = 8888
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -176,17 +181,19 @@ class messenger_(QMainWindow):
         self.new_thread = threading.Thread(target=self.receiv)
         self.new_thread.start()
         self.line = self.ui.friends_comboBox.lineEdit()
-        self.ui.listWidget.itemClicked.connect(self.listview)
+        self.ui.friends_list.itemClicked.connect(self.listview)
         self.line.returnPressed.connect(self.nado)
 
     def add_in_group(self, event):
+        print("the _add_in_group_ function has now started working")
         self.menu_1 = QMenu(self)
-        self.ui.listWidget.setSelectionMode(QAbstractItemView.MultiSelection)
-        for x in range(0, self.ui.listWidget.count()):
-            action = self.menu_1.addAction(self.ui.listWidget.item(x).text())
+        self.ui.friends_list.setSelectionMode(QAbstractItemView.MultiSelection)
+        for x in range(0, self.ui.friends_list.count()):
+            action = self.menu_1.addAction(self.ui.friends_list.item(x).text())
         result = self.menu_1.exec_(self.mapToGlobal(event.pos()))
 
     def context_menu_event(self, event):
+        print("the _context_menu_event_ function has now started working")
         self.menu = QMenu(self)
         action = self.menu.addAction("Add to friends")
         action_1 = self.menu.addAction("*Unassigned action*")
@@ -197,14 +204,16 @@ class messenger_(QMainWindow):
             print("press")
 
     def nado(self):
+        print("the _nado_ function has now started working")
         self.sock.send((self.line.text()).encode('utf-8'))
         print("send")
         self.ui.friends_comboBox.hidePopup()
         self.ui.friends_comboBox.clear()
-        # self.ui.listWidget.takeItem(self.ui.listWidget.selectedItems()[0])
+        # self.ui.friends_list.takeItem(self.ui.friends_list.selectedItems()[0])
         self.ui.friends_comboBox.activated.connect(self.pressed_keys)
 
     def get_key(self, d):
+        print("the _get_key_ function has now started working")
         for item in d.items():
             print(item[0], item[1])
             f = open(item[0] + ".png", 'wb')
@@ -215,6 +224,7 @@ class messenger_(QMainWindow):
             self.ui.friends_comboBox.addItem(icon, item[0])
 
     def receiv(self):
+        print("the _receiv_ function has now started working")
         while True:
             self.dataa = self.sock.recv(40960000)  # .decode('utf-8').split(",")
             self.dataa = pickle.loads(self.dataa)
@@ -223,7 +233,8 @@ class messenger_(QMainWindow):
                 self.get_key((self.dataa))
 
     def pressed_keys(self):
-        self.ui.listWidget.setIconSize(QtCore.QSize(40, 40))
+        print("the _pressed_keys_ function has now started working")
+        self.ui.friends_list.setIconSize(QtCore.QSize(40, 40))
         self.current_item = self.ui.friends_comboBox.currentText()
         print(self.current_item)
         item = QtWidgets.QListWidgetItem()
@@ -231,16 +242,17 @@ class messenger_(QMainWindow):
         icon.addPixmap(QtGui.QPixmap(self.current_item + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item.setIcon(icon)
         item.setText(self.current_item)
-        self.ui.listWidget.addItem(item)
+        self.ui.friends_list.addItem(item)
         self.ui.friends_comboBox.activated.disconnect(self.pressed_keys)
 
     def listview(self):
+        print("the _listview_ function has now started working")
         self.ui.msg_list.clear()
         brush = QtGui.QBrush(QtGui.QColor(255, 225, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
-        itemm = self.ui.listWidget.currentItem()
+        itemm = self.ui.friends_list.currentItem()
         itemm.setBackground(brush)
-        self.item = self.ui.listWidget.currentItem().text()
+        self.item = self.ui.friends_list.currentItem().text()
         self.c.execute("""CREATE TABLE IF NOT EXISTS """ + '"' + self.item + '"' + """(sender TEXT, message TEXT)""")
         self.c.execute("""SELECT * FROM """'"' + self.item + '"')
         f = self.c.fetchall()
@@ -258,6 +270,7 @@ class messenger_(QMainWindow):
         print(self.item)
 
     def closeEvent(self, event):
+        print("the _closeEvent_ function has now started working")
         self.hide()
         sys.exit(0)
 

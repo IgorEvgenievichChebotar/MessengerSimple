@@ -28,19 +28,19 @@ class MainDialog(QMainWindow):
         self.ui.label_4.setText(_translate("MainWindow", arg))
         self.ui.label_4.setStyleSheet('color: red')
 
-    def welcome_window_show(self, username):  # opening the chat window
-        print("the _welcome_window_show_ function has now started working")
+    def chat_window_show(self, username):  # opening the chat window
+        print("the _chat_window_show_ function has now started working")
         self.main_window = messenger_(self.username)
         self.main_window.show()
 
-    def sign_up_show(self):  # opening the auth window
-        print("the _sign_up_show_ function has now started working")
+    def reg_window_show(self):  # opening the auth window
+        print("the _reg_window_show_ function has now started working")
         self.sign_up_window = Dialog(self.s)
         self.sign_up_window.show()
 
     def sign_up_check(self):  # processing the signUp button
         print("the _sign_up_check_ function has now started working")
-        self.sign_up_show()
+        self.reg_window_show()
 
     def login_check(self):  # input validation and input processing (processing the signIn button)
         print("the _login_check_ function has now started working")
@@ -56,7 +56,7 @@ class MainDialog(QMainWindow):
         self.data = self.s.recv(1024).decode('utf-8').split()
         if "выполнен" in self.data:
             print("signed in")
-            self.welcome_window_show(self.username)
+            self.chat_window_show(self.username)
             self.hide()
             self.s.close()
         elif "существует" in self.data:
