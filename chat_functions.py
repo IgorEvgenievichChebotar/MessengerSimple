@@ -152,7 +152,7 @@ class messenger_(QMainWindow):
             icon.addPixmap(QtGui.QPixmap(self.username + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
             add_msg.setIcon(icon)
             add_msg.setText(self.message)
-            self.ui.ListWidget.addItem(add_msg)
+            self.ui.msg_list.addItem(add_msg)
             # self.item = self.ui.listWidget.currentItem()
             if self.item:
                 self.c.execute("""INSERT INTO""" + '"' + self.item + '"' + """VALUES (?,?)""",
@@ -235,7 +235,7 @@ class messenger_(QMainWindow):
         self.ui.friends_comboBox.activated.disconnect(self.pressed_keys)
 
     def listview(self):
-        self.ui.ListWidget.clear()
+        self.ui.msg_list.clear()
         brush = QtGui.QBrush(QtGui.QColor(255, 225, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
         itemm = self.ui.listWidget.currentItem()
@@ -253,8 +253,8 @@ class messenger_(QMainWindow):
                 icon.addPixmap(QtGui.QPixmap(f[x][0] + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 add_msg.setIcon(icon)
                 add_msg.setText(mess)
-                self.ui.ListWidget.setIconSize(QtCore.QSize(40, 40))
-                self.ui.ListWidget.addItem(add_msg)
+                self.ui.msg_list.setIconSize(QtCore.QSize(40, 40))
+                self.ui.msg_list.addItem(add_msg)
         print(self.item)
 
     def closeEvent(self, event):
