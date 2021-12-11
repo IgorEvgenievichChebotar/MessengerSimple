@@ -52,7 +52,7 @@ def receive(conn, addr, users, c):
         except:
 
             print(Fore.RED + (str(addr[0]) + ' : ' + str(addr[1]) + " is offline"))
-            status = (addr, "offline")
+            status = (addr, "Offline")
             conn.send(pickle.dumps(status))
 
             break

@@ -24,29 +24,29 @@ class messenger_(QMainWindow):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((self.host, self.port))
         self.s.send(("name: " + self.username).encode('utf-8'))
-        self.ui.my_image_btn.setMaximumSize(100, 100)
+        self.ui.my_image.setMaximumSize(100, 100)
         self.ui.my_login_label.setText(self.username)
         self.thread = threading.Thread(target=self.find)
         self.thread.start()
         self.handler()
-        self.thread_1 = threading.Thread(target=self.receive, args=(self.s, "a"))
+        self.thread_1 = threading.Thread(target=self.receive)
         self.thread_1.start()
         self.ui.msg_lineEdit.returnPressed.connect(self.clicked_but)
-        self.ui.my_image_btn.clicked.connect(self.change_image)
+        self.ui.my_image.clicked.connect(self.change_image)
 
         path_file = open("path_avatarka.log", 'r')
         image_dir = path_file.read()
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(image_dir), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.ui.my_image_btn.setIcon(icon)
-        self.ui.my_image_btn.setIconSize(QtCore.QSize(100, 100))
+        self.ui.my_image.setIcon(icon)
+        self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
 
     def change_image(self):
         print("the _change_image_ function has now started working")
         fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
         print(fname)
         if fname:
-            self.ui.my_image_btn.setStyleSheet("QPushButton{\n"
+            self.ui.my_image.setStyleSheet("QPushButton{\n"
                                                "  display: block;\n"
                                                "  box-sizing: border-box;\n"
                                                "  margin: 0 auto;\n"
@@ -64,8 +64,8 @@ class messenger_(QMainWindow):
                                                "}")
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(fname), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.ui.my_image_btn.setIcon(icon)
-            self.ui.my_image_btn.setIconSize(QtCore.QSize(100, 100))
+            self.ui.my_image.setIcon(icon)
+            self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
             f = open("path_avatarka.log", 'w')
             f.write(fname)
             f.close()
@@ -73,15 +73,15 @@ class messenger_(QMainWindow):
             f = open("path_avatarka.log", 'r')
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(f.read()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.ui.my_image_btn.setIcon(icon)
-            self.ui.my_image_btn.setIconSize(QtCore.QSize(100, 100))
+            self.ui.my_image.setIcon(icon)
+            self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
 
     def handler(self):
         print("the _handler_ function has now started working")
         self.ui.send_msg_btn.clicked.connect(self.clicked_but)
 
-    def receive(self, s, a):
-        print("the _handler_ function has now started working")
+    def receive(self):
+        print("the _receive_ function has now started working")
         while True:
             self.data = self.s.recv(40960000)
             data = pickle.loads(self.data)
@@ -182,6 +182,7 @@ class messenger_(QMainWindow):
         self.new_thread.start()
         self.line = self.ui.friends_comboBox.lineEdit()
         self.ui.friends_list.itemClicked.connect(self.msg_list)
+        self.ui.friends_list.itemClicked.connect(self.set_profile)
         self.line.returnPressed.connect(self.nado)
 
     def add_in_group(self, event):
@@ -227,17 +228,24 @@ class messenger_(QMainWindow):
         print("the _receiv_ function has now started working")
 
         while True:
+            print("1")
             self.dataa = self.sock.recv(40960000)  # .decode('utf-8').split(",")
+            print("2")
             self.dataa = pickle.loads(self.dataa)
+            print("3")
             print(self.dataa)
-            if "online" in self.dataa:
-                print("ONLINE")
-            elif "offline" in self.dataa:
-                print("OFFLINE")
+            print(len(self.dataa))
+            if len(self.dataa) == 2:
+                print("4")
+                return(self.dataa[0], self.dataa[1])
             else:
+                print("5")
                 print("PROCESSING FIND FRIENDS")
+                print(self.dataa)
+                print("6")
                 if self.dataa:
                     self.get_key((self.dataa))
+                    print("7")
 
     def pressed_keys(self):
         print("the _pressed_keys_ function has now started working")
@@ -274,13 +282,20 @@ class messenger_(QMainWindow):
                 add_msg.setText(mess)
                 self.ui.msg_list.setIconSize(QtCore.QSize(40, 40))
                 self.ui.msg_list.addItem(add_msg)
-                
-                self.get_set_status()
 
-    def get_set_status(self):
+    def set_profile(self):
+        print("the _set_profile_ function has now started working")
+        addr, status = self.receiv()
+        print(addr[0], addr[1], status)
         self.ui.friend_login_label.setText(self.item)
-        self.ui.friend_activity.setText("STATUS")
-        self.ui.friend_activity.setStyleSheet('color: red')
+        self.ui.friend_activity.setText(status)
+
+
+
+        if "online" in status:
+            self.ui.friend_activity.setStyleSheet('color: green')
+        else:
+            self.ui.friend_activity.setStyleSheet('color: red')
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")

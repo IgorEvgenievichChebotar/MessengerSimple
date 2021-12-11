@@ -94,7 +94,7 @@
      </widget>
     </item>
     <item row="0" column="0" rowspan="3">
-     <widget class="QPushButton" name="my_image_btn">
+     <widget class="QPushButton" name="my_image">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -341,7 +341,7 @@
     </item>
    </layout>
    <zorder>friends_comboBox</zorder>
-   <zorder>my_image_btn</zorder>
+   <zorder>my_image</zorder>
    <zorder>find_friends_btn</zorder>
    <zorder>friends_list</zorder>
    <zorder>msg_list</zorder>
