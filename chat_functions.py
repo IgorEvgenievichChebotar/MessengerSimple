@@ -225,12 +225,19 @@ class messenger_(QMainWindow):
 
     def receiv(self):
         print("the _receiv_ function has now started working")
+        print("1")
         while True:
+            print("2")
             self.dataa = self.sock.recv(40960000)  # .decode('utf-8').split(",")
+            print("3")
             self.dataa = pickle.loads(self.dataa)
+            print("4")
             print(self.dataa)
+            print("5")
             if self.dataa:
+                print("6")
                 self.get_key((self.dataa))
+                print("7")
 
     def pressed_keys(self):
         print("the _pressed_keys_ function has now started working")
