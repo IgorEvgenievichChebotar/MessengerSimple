@@ -137,6 +137,7 @@ class messenger_(QMainWindow):
                 brush.setStyle(QtCore.Qt.SolidPattern)
                 itemm = self.ui.listWidget.item(0)
                 itemm.setBackground(brush)
+                print(itemm.text())
             # self.guest_message = str('Received from ' + sender +': '+ message_)
             # self.ui.plainTextEdit.appendPlainText(self.guest_message)
 
@@ -152,7 +153,7 @@ class messenger_(QMainWindow):
             add_msg.setIcon(icon)
             add_msg.setText(self.message)
             self.ui.ListWidget.addItem(add_msg)
-            self.item = self.ui.listWidget.currentItem()
+            # self.item = self.ui.listWidget.currentItem()
             if self.item:
                 self.c.execute("""INSERT INTO""" + '"' + self.item + '"' + """VALUES (?,?)""",
                                (self.username, self.message,))
@@ -174,7 +175,7 @@ class messenger_(QMainWindow):
         self.sock.send(("name: " + self.username).encode('utf-8'))
         self.new_thread = threading.Thread(target=self.receiv)
         self.new_thread.start()
-        self.line = self.ui.comboBox.lineEdit()
+        self.line = self.ui.friends_comboBox.lineEdit()
         self.ui.listWidget.itemClicked.connect(self.listview)
         self.line.returnPressed.connect(self.nado)
 
@@ -198,10 +199,10 @@ class messenger_(QMainWindow):
     def nado(self):
         self.sock.send((self.line.text()).encode('utf-8'))
         print("send")
-        self.ui.comboBox.hidePopup()
-        self.ui.comboBox.clear()
+        self.ui.friends_comboBox.hidePopup()
+        self.ui.friends_comboBox.clear()
         # self.ui.listWidget.takeItem(self.ui.listWidget.selectedItems()[0])
-        self.ui.comboBox.activated.connect(self.pressed_keys)
+        self.ui.friends_comboBox.activated.connect(self.pressed_keys)
 
     def get_key(self, d):
         for item in d.items():
@@ -211,7 +212,7 @@ class messenger_(QMainWindow):
             f.close()
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(item[0] + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.ui.comboBox.addItem(icon, item[0])
+            self.ui.friends_comboBox.addItem(icon, item[0])
 
     def receiv(self):
         while True:
@@ -223,7 +224,7 @@ class messenger_(QMainWindow):
 
     def pressed_keys(self):
         self.ui.listWidget.setIconSize(QtCore.QSize(40, 40))
-        self.current_item = self.ui.comboBox.currentText()
+        self.current_item = self.ui.friends_comboBox.currentText()
         print(self.current_item)
         item = QtWidgets.QListWidgetItem()
         icon = QtGui.QIcon()
@@ -231,7 +232,7 @@ class messenger_(QMainWindow):
         item.setIcon(icon)
         item.setText(self.current_item)
         self.ui.listWidget.addItem(item)
-        self.ui.comboBox.activated.disconnect(self.pressed_keys)
+        self.ui.friends_comboBox.activated.disconnect(self.pressed_keys)
 
     def listview(self):
         self.ui.ListWidget.clear()

@@ -49,15 +49,19 @@ def login(data, conn, con, c):
 def receive(conn, a, addr, users, con, c):
     print("the _receive_ function has now started working")
     while True:
-        data = conn.recv(1024).decode('utf-8').split()
-        users[addr] = conn
-        if not data:
+        try:
+            data = conn.recv(1024).decode('utf-8').split()
+            users[addr] = conn
+            if not data:
+                break
+            if 'reg' in data:
+                registration(data, conn, con, c)
+            else:
+                if 'log' in data:
+                    login(data, conn, con, c)
+        except:
+            print("connection: ", str(addr[0]) + ' : ' + str(addr[1]), " losted")
             break
-        if 'reg' in data:
-            registration(data, conn, con, c)
-        else:
-            if 'log' in data:
-                login(data, conn, con, c)
 
 
 def Main():
