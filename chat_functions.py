@@ -230,8 +230,14 @@ class messenger_(QMainWindow):
             self.dataa = self.sock.recv(40960000)  # .decode('utf-8').split(",")
             self.dataa = pickle.loads(self.dataa)
             print(self.dataa)
-            if self.dataa:
-                self.get_key((self.dataa))
+            if "online" in self.dataa:
+                print("ONLINE")
+            elif "offline" in self.dataa:
+                print("OFFLINE")
+            else:
+                print("PROCESSING FIND FRIENDS")
+                if self.dataa:
+                    self.get_key((self.dataa))
 
     def pressed_keys(self):
         print("the _pressed_keys_ function has now started working")
@@ -268,9 +274,13 @@ class messenger_(QMainWindow):
                 add_msg.setText(mess)
                 self.ui.msg_list.setIconSize(QtCore.QSize(40, 40))
                 self.ui.msg_list.addItem(add_msg)
-                self.ui.friend_login_label.setText(self.item)
-                self.ui.friend_activity.setText("STATUS")
-                self.ui.friend_activity.setStyleSheet('color: red')
+                
+                self.get_set_status()
+
+    def get_set_status(self):
+        self.ui.friend_login_label.setText(self.item)
+        self.ui.friend_activity.setText("STATUS")
+        self.ui.friend_activity.setStyleSheet('color: red')
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")

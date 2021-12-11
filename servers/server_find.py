@@ -40,6 +40,8 @@ def receive(conn, addr, users, c):
             data = conn.recv(4096).decode('utf-8')
 
             print(Fore.GREEN + (str(addr[0]) + ' : ' + str(addr[1]) + " is online"))
+            status = (addr, "online")
+            conn.send(pickle.dumps(status))
 
             users[addr] = conn
             if not data:
@@ -50,6 +52,8 @@ def receive(conn, addr, users, c):
         except:
 
             print(Fore.RED + (str(addr[0]) + ' : ' + str(addr[1]) + " is offline"))
+            status = (addr, "offline")
+            conn.send(pickle.dumps(status))
 
             break
 
