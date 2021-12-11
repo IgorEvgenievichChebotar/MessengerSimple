@@ -212,6 +212,7 @@ class messenger_(QMainWindow):
         self.ui.friends_comboBox.clear()
         # self.ui.friends_list.takeItem(self.ui.friends_list.selectedItems()[0])
         self.ui.friends_comboBox.activated.connect(self.pressed_keys)
+        print("до friends_comboBox.activated.connect")
 
     def get_key(self, d):
         print("the _get_key_ function has now started working")
@@ -234,7 +235,7 @@ class messenger_(QMainWindow):
             self.dataa = pickle.loads(self.dataa)
             print("3")
             print(self.dataa)
-            print(len(self.dataa))
+            print("len: ", len(self.dataa))
             if len(self.dataa) == 2:
                 print("4")
                 return(self.dataa[0], self.dataa[1])
@@ -289,9 +290,6 @@ class messenger_(QMainWindow):
         print(addr[0], addr[1], status)
         self.ui.friend_login_label.setText(self.item)
         self.ui.friend_activity.setText(status)
-
-
-
         if "online" in status:
             self.ui.friend_activity.setStyleSheet('color: green')
         else:
