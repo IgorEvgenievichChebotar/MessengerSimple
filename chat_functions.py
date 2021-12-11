@@ -31,7 +31,7 @@ class messenger_(QMainWindow):
         self.handler()
         self.thread_1 = threading.Thread(target=self.receive, args=(self.s, "a"))
         self.thread_1.start()
-        self.ui.lineEdit.returnPressed.connect(self.clicked_but)
+        self.ui.msg_lineEdit.returnPressed.connect(self.clicked_but)
         self.ui.my_image_btn.clicked.connect(self.change_image)
 
         path_file = open("path_avatarka.log", 'r')
@@ -146,7 +146,7 @@ class messenger_(QMainWindow):
 
     def clicked_but(self):
         print("the _clicked_but_ function has now started working")
-        self.msg = self.ui.lineEdit.text().split()
+        self.msg = self.ui.msg_lineEdit.text().split()
         if self.msg:
             print(self.msg)
             self.message = self.msg[0:]
@@ -165,7 +165,7 @@ class messenger_(QMainWindow):
                 self.s.send(
                     ("sender: " + self.username + " receiver: " + self.item + " message: " + self.message).encode(
                         'utf-8'))
-                self.ui.lineEdit.clear()
+                self.ui.msg_lineEdit.clear()
             else:
                 print("нет получателя!")
         else:
