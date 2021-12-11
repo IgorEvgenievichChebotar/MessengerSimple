@@ -137,7 +137,6 @@ class messenger_(QMainWindow):
                 brush.setStyle(QtCore.Qt.SolidPattern)
                 itemm = self.ui.listWidget.item(0)
                 itemm.setBackground(brush)
-                print(itemm.text())
             # self.guest_message = str('Received from ' + sender +': '+ message_)
             # self.ui.plainTextEdit.appendPlainText(self.guest_message)
 
@@ -153,7 +152,7 @@ class messenger_(QMainWindow):
             add_msg.setIcon(icon)
             add_msg.setText(self.message)
             self.ui.ListWidget.addItem(add_msg)
-            # self.item = self.ui.listWidget.currentItem()
+            self.item = self.ui.listWidget.currentItem()
             if self.item:
                 self.c.execute("""INSERT INTO""" + '"' + self.item + '"' + """VALUES (?,?)""",
                                (self.username, self.message,))
