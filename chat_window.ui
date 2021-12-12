@@ -278,7 +278,7 @@
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="text">
-       <string>Add friend</string>
+       <string>Add to friends</string>
       </property>
      </widget>
     </item>

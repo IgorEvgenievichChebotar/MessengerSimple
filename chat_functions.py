@@ -1,16 +1,17 @@
+import pathlib
 import pickle
 import socket
 import sqlite3
 import threading
-import pathlib
-import time
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
 from PyQt5.QtWidgets import *
+from colorama import init, Fore
+
+init(autoreset=True)
 
 from chat_window import Ui_chatWindow
-
 
 
 class messenger_(QMainWindow):
@@ -48,30 +49,29 @@ class messenger_(QMainWindow):
         self.ui.my_image.setIcon(icon)
         self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
 
-        self.friends()
+        self.show_friends()
 
     def change_image(self):
         print("the _change_image_ function has now started working")
-
         fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
         print(fname)
         if fname:
             self.ui.c.setStyleSheet("QPushButton{\n"
-                                               "  display: block;\n"
-                                               "  box-sizing: border-box;\n"
-                                               "  margin: 0 auto;\n"
-                                               "  padding: 8px;\n"
-                                               "  width: 80%;\n"
-                                               "  max-width: 200px;\n"
-                                               "  background: #fff; /* запасной цвет для старых браузеров */\n"
-                                               "  background: rgba(255, 255, 255,0);\n"
-                                               "  border-radius: 8px;\n"
-                                               "  color: #fff;\n"
-                                               "  text-align: center;\n"
-                                               "  text-decoration: none;\n"
-                                               "  letter-spacing: 1px;\n"
-                                               "  transition: all 0.3s ease-out;\n"
-                                               "}")
+                                    "  display: block;\n"
+                                    "  box-sizing: border-box;\n"
+                                    "  margin: 0 auto;\n"
+                                    "  padding: 8px;\n"
+                                    "  width: 80%;\n"
+                                    "  max-width: 200px;\n"
+                                    "  background: #fff; /* запасной цвет для старых браузеров */\n"
+                                    "  background: rgba(255, 255, 255,0);\n"
+                                    "  border-radius: 8px;\n"
+                                    "  color: #fff;\n"
+                                    "  text-align: center;\n"
+                                    "  text-decoration: none;\n"
+                                    "  letter-spacing: 1px;\n"
+                                    "  transition: all 0.3s ease-out;\n"
+                                    "}")
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(fname), QtGui.QIcon.Normal, QtGui.QIcon.Off)
             self.ui.my_image.setIcon(icon)
@@ -88,12 +88,10 @@ class messenger_(QMainWindow):
 
     def handler(self):
         print("the _handler_ function has now started working")
-
         self.ui.send_msg_btn.clicked.connect(self.clicked_but)
 
     def receive(self):
         print("the _receive_ function has now started working")
-
         while True:
             self.data = self.s.recv(40960000)
             data = pickle.loads(self.data)
@@ -158,7 +156,6 @@ class messenger_(QMainWindow):
 
     def clicked_but(self):
         print("the _clicked_but_ function has now started working")
-
         self.msg = self.ui.msg_lineEdit.text().split()
         if self.msg:
             print(self.msg)
@@ -186,7 +183,6 @@ class messenger_(QMainWindow):
 
     def find(self):
         print("the _find_ function has now started working")
-
         host = '127.0.0.1'
         port = 8888
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -201,7 +197,6 @@ class messenger_(QMainWindow):
 
     def add_in_group(self, event):
         print("the _add_in_group_ function has now started working")
-
         self.menu_1 = QMenu(self)
         self.ui.friends_list.setSelectionMode(QAbstractItemView.MultiSelection)
         for x in range(0, self.ui.friends_list.count()):
@@ -210,7 +205,6 @@ class messenger_(QMainWindow):
 
     def context_menu_event(self, event):
         print("the _context_menu_event_ function has now started working")
-
         self.menu = QMenu(self)
         action = self.menu.addAction("Add to friends")
         action_1 = self.menu.addAction("*Unassigned action*")
@@ -222,7 +216,6 @@ class messenger_(QMainWindow):
 
     def nado(self):
         print("the _nado_ function has now started working")
-
         self.sock.send((self.line.text()).encode('utf-8'))
         self.ui.friends_comboBox.hidePopup()
         self.ui.friends_comboBox.clear()
@@ -232,7 +225,6 @@ class messenger_(QMainWindow):
 
     def get_key(self, d):
         print("the _get_key_ function has now started working")
-
         for item in d.items():
             f = open(item[0] + ".png", 'wb')
             f.write(item[1])
@@ -243,7 +235,6 @@ class messenger_(QMainWindow):
 
     def receiv(self):
         print("the _receiv_ function has now started working")
-
         while True:
             self.dataa = self.sock.recv(40960000)  # .decode('utf-8').split(",")
             self.dataa = pickle.loads(self.dataa)
@@ -252,7 +243,6 @@ class messenger_(QMainWindow):
 
     def pressed_keys(self):
         print("the _pressed_keys_ function has now started working")
-
         self.ui.friends_list.setIconSize(QtCore.QSize(40, 40))
         self.current_item = self.ui.friends_comboBox.currentText()
         item = QtWidgets.QListWidgetItem()
@@ -262,28 +252,16 @@ class messenger_(QMainWindow):
         item.setText(self.current_item)
         self.ui.friends_list.addItem(item)
 
-        # DB MANIPULATE
         # self.username - my name
         # self.current_item - friend's name
-        print(self.username, self.current_item)
-        try:
-            self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
-            entry = self.c2.fetchone()
-            if entry is None:
-                self.c2.execute("INSERT INTO friends VALUES(?, ?);", (self.username, self.current_item))
-                self.con2.commit()
-            else:
-                print("the string of the user and his friends were founded")
-                
-        except:
-            print("database error in func _pressed_keys()_")
+        self.add_friend(self.current_item)
+        self.show_friends()
 
         self.ui.friends_comboBox.activated.disconnect(self.pressed_keys)
         self.ui.find_friends_btn.clicked.disconnect(self.pressed_keys)
 
     def msg_list(self):
         print("the _msg_list_ function has now started working")
-
         self.ui.msg_list.clear()
         brush = QtGui.QBrush(QtGui.QColor(255, 225, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -307,7 +285,6 @@ class messenger_(QMainWindow):
 
     def set_profile(self):
         print("the _set_profile_ function has now started working")
-
         # self.username - my name
         # self.item - friend's name
 
@@ -329,29 +306,49 @@ class messenger_(QMainWindow):
             self.ui.friend_activity.setText("Offline")
             self.ui.friend_activity.setStyleSheet('color: red')
 
-    def friends(self):
-        print("the _friends_ function has now started working")
-
+    def show_friends(self):
+        print("the _show_friends_ function has now started working")
         try:
-
             self.c2.execute("""CREATE TABLE IF NOT EXISTS friends(
                user TEXT,
-               his_friends TEXT);
+               his_friend TEXT);
             """)
             self.con2.commit()
 
+            self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
+            entry = self.c2.fetchone()
+            if entry is None:
+                print(Fore.BLUE + "the string in friends is empty")
+            else:
+                print(Fore.GREEN + "the string in friends were founded")
+
+                # расписать работу с добавлением виджетов с друзьями
+                '''
+                for():
+                    friend_item = 
+                    self.ui.friends_list.addItem(friend_item)
+                '''
+
         except:
-            print("database error in func _friends()_")
+            print("database error in func _show_friends()_")
+
+    def add_friend(self, friend):
+        print("the _show_friends_ function has now started working")
+        try:
+            self.c2.execute("INSERT INTO friends VALUES(?, ?);", (self.username, friend))
+            self.con2.commit()
+        except:
+            print("database error in func _add_friend()_")
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")
-
         self.hide()
         sys.exit(0)
 
 
 if __name__ == "__main__":
     import sys
+
     app = QApplication(sys.argv)
     w = messenger_()
     w.show()
