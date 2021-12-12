@@ -267,9 +267,14 @@ class messenger_(QMainWindow):
         # self.current_item - friend's name
         print(self.username, self.current_item)
         try:
-            print("DB MANIPULATE")
-            self.c2.execute("INSERT INTO friends VALUES(?, ?);", (self.username, self.current_item))
-            self.con2.commit()
+            self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
+            entry = self.c2.fetchone()
+            if entry is None:
+                self.c2.execute("INSERT INTO friends VALUES(?, ?);", (self.username, self.current_item))
+                self.con2.commit()
+            else:
+                print("the string of the user and his friends were founded")
+                
         except:
             print("database error in func _pressed_keys()_")
 
