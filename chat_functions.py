@@ -42,6 +42,8 @@ class messenger_(QMainWindow):
         self.ui.msg_lineEdit.returnPressed.connect(self.clicked_but)
         self.ui.my_image.clicked.connect(self.change_image)
 
+        self.ui.friends_list.itemClicked.connect(self.context_menu_event)
+
         path_file = open("path_avatarka.log", 'r')
         image_dir = path_file.read()
         icon = QtGui.QIcon()
@@ -50,6 +52,7 @@ class messenger_(QMainWindow):
         self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
 
         self.show_friends()
+
 
     def change_image(self):
         print("the _change_image_ function has now started working")
@@ -195,23 +198,21 @@ class messenger_(QMainWindow):
         self.ui.friends_list.itemClicked.connect(self.set_profile)
         self.line.returnPressed.connect(self.nado)
 
-    def add_in_group(self, event):
-        print("the _add_in_group_ function has now started working")
-        self.menu_1 = QMenu(self)
-        self.ui.friends_list.setSelectionMode(QAbstractItemView.MultiSelection)
-        for x in range(0, self.ui.friends_list.count()):
-            action = self.menu_1.addAction(self.ui.friends_list.item(x).text())
-        result = self.menu_1.exec_(self.mapToGlobal(event.pos()))
-
     def context_menu_event(self, event):
         print("the _context_menu_event_ function has now started working")
         self.menu = QMenu(self)
-        action = self.menu.addAction("Add to friends")
+        print("1")
+        action = self.menu.addAction("Delete friend")
+        print("2")
         action_1 = self.menu.addAction("*Unassigned action*")
+        print("3")
         result = self.menu.exec_(self.mapToGlobal(event.pos()))
+        print("4")
         if action == result:
-            self.add_in_group(event)
+            print("5")
+            self.delete_friend_widget()
         elif action_1 == result:
+            print("6")
             print("press")
 
     def nado(self):
@@ -356,6 +357,11 @@ class messenger_(QMainWindow):
         item.setIcon(icon)
         item.setText(friend_name)
         self.ui.friends_list.addItem(item)
+
+    def delete_friend_widget(self):
+        print("the _delete_friend_widget_ function has now started working")
+        self.ui.friends_list.takeItem(0)
+
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")
