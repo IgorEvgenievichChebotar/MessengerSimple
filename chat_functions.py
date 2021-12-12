@@ -279,18 +279,18 @@ class messenger_(QMainWindow):
     def set_profile(self):
         print("the _set_profile_ function has now started working")
 
-        try:
-            self.c2.execute("""SELECT name FROM base_connection""")
-            name = self.c2.fetchall
-            print("NAME = ", name)
-        except sqlite3.OperationalError:
-            print("database locked")
+        self.ui.friend_login_label.setText(self.item)  # self.item - it`s name of selected friend
 
-        #    self.ui.friend_login_label.setText(self.item)
-        #    self.ui.friend_activity.setText("status")
+        self.c2.execute("SELECT name FROM base_connection WHERE name = ?", (self.item,))
+        name = self.c2.fetchone()
+        print("NAME = ", name)
 
-        #    self.ui.friend_activity.setStyleSheet('color: green')
-        #    self.ui.friend_activity.setStyleSheet('color: red')
+        if name is not None:
+            self.ui.friend_activity.setText("Online")
+            self.ui.friend_activity.setStyleSheet('color: green')
+        else:
+            self.ui.friend_activity.setText("Offline")
+            self.ui.friend_activity.setStyleSheet('color: red')
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")

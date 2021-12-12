@@ -332,7 +332,7 @@
        <string notr="true">color: rgb(0, 160, 0);</string>
       </property>
       <property name="text">
-       <string>Online</string>
+       <string>online</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
