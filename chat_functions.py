@@ -48,8 +48,11 @@ class messenger_(QMainWindow):
         self.ui.my_image.setIcon(icon)
         self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
 
+        self.friends()
+
     def change_image(self):
         print("the _change_image_ function has now started working")
+
         fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
         print(fname)
         if fname:
@@ -85,10 +88,12 @@ class messenger_(QMainWindow):
 
     def handler(self):
         print("the _handler_ function has now started working")
+
         self.ui.send_msg_btn.clicked.connect(self.clicked_but)
 
     def receive(self):
         print("the _receive_ function has now started working")
+
         while True:
             self.data = self.s.recv(40960000)
             data = pickle.loads(self.data)
@@ -153,6 +158,7 @@ class messenger_(QMainWindow):
 
     def clicked_but(self):
         print("the _clicked_but_ function has now started working")
+
         self.msg = self.ui.msg_lineEdit.text().split()
         if self.msg:
             print(self.msg)
@@ -180,6 +186,7 @@ class messenger_(QMainWindow):
 
     def find(self):
         print("the _find_ function has now started working")
+
         host = '127.0.0.1'
         port = 8888
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -194,6 +201,7 @@ class messenger_(QMainWindow):
 
     def add_in_group(self, event):
         print("the _add_in_group_ function has now started working")
+
         self.menu_1 = QMenu(self)
         self.ui.friends_list.setSelectionMode(QAbstractItemView.MultiSelection)
         for x in range(0, self.ui.friends_list.count()):
@@ -202,6 +210,7 @@ class messenger_(QMainWindow):
 
     def context_menu_event(self, event):
         print("the _context_menu_event_ function has now started working")
+
         self.menu = QMenu(self)
         action = self.menu.addAction("Add to friends")
         action_1 = self.menu.addAction("*Unassigned action*")
@@ -213,14 +222,17 @@ class messenger_(QMainWindow):
 
     def nado(self):
         print("the _nado_ function has now started working")
+
         self.sock.send((self.line.text()).encode('utf-8'))
         self.ui.friends_comboBox.hidePopup()
         self.ui.friends_comboBox.clear()
         # self.ui.friends_list.takeItem(self.ui.friends_list.selectedItems()[0])
         self.ui.friends_comboBox.activated.connect(self.pressed_keys)
+        self.ui.find_friends_btn.clicked.connect(self.pressed_keys)
 
     def get_key(self, d):
         print("the _get_key_ function has now started working")
+
         for item in d.items():
             f = open(item[0] + ".png", 'wb')
             f.write(item[1])
@@ -231,6 +243,7 @@ class messenger_(QMainWindow):
 
     def receiv(self):
         print("the _receiv_ function has now started working")
+
         while True:
             self.dataa = self.sock.recv(40960000)  # .decode('utf-8').split(",")
             self.dataa = pickle.loads(self.dataa)
@@ -239,6 +252,7 @@ class messenger_(QMainWindow):
 
     def pressed_keys(self):
         print("the _pressed_keys_ function has now started working")
+
         self.ui.friends_list.setIconSize(QtCore.QSize(40, 40))
         self.current_item = self.ui.friends_comboBox.currentText()
         item = QtWidgets.QListWidgetItem()
@@ -247,10 +261,24 @@ class messenger_(QMainWindow):
         item.setIcon(icon)
         item.setText(self.current_item)
         self.ui.friends_list.addItem(item)
+
+        # DB MANIPULATE
+        # self.username - my name
+        # self.current_item - friend's name
+        print(self.username, self.current_item)
+        try:
+            print("DB MANIPULATE")
+            self.c2.execute("INSERT INTO friends VALUES(?, ?);", (self.username, self.current_item))
+            self.con2.commit()
+        except:
+            print("database error in func _pressed_keys()_")
+
         self.ui.friends_comboBox.activated.disconnect(self.pressed_keys)
+        self.ui.find_friends_btn.clicked.disconnect(self.pressed_keys)
 
     def msg_list(self):
         print("the _msg_list_ function has now started working")
+
         self.ui.msg_list.clear()
         brush = QtGui.QBrush(QtGui.QColor(255, 225, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -275,7 +303,8 @@ class messenger_(QMainWindow):
     def set_profile(self):
         print("the _set_profile_ function has now started working")
 
-        self.ui.friend_login_label.setText(self.item)  # self.item - it`s name of selected friend
+        # self.username - my name
+        # self.item - friend's name
 
         path_file = open("path_avatarka.log", 'r')
         image_dir = path_file.read()
@@ -287,14 +316,31 @@ class messenger_(QMainWindow):
         self.c2.execute("SELECT name FROM base_connection WHERE name = ?", (self.item,))
         name = self.c2.fetchone()
         if name is not None:
+            self.ui.friend_login_label.setText(self.item)
             self.ui.friend_activity.setText("Online")
             self.ui.friend_activity.setStyleSheet('color: green')
         else:
+            self.ui.friend_login_label.setText(self.item)
             self.ui.friend_activity.setText("Offline")
             self.ui.friend_activity.setStyleSheet('color: red')
 
+    def friends(self):
+        print("the _friends_ function has now started working")
+
+        try:
+
+            self.c2.execute("""CREATE TABLE IF NOT EXISTS friends(
+               user TEXT,
+               his_friends TEXT);
+            """)
+            self.con2.commit()
+
+        except:
+            print("database error in func _friends()_")
+
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")
+
         self.hide()
         sys.exit(0)
 

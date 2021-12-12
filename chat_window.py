@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
 
 
 class Ui_chatWindow(object):
@@ -6,6 +7,7 @@ class Ui_chatWindow(object):
         chatWindow.setObjectName("chatWindow")
         chatWindow.resize(630, 570)
         chatWindow.setMinimumSize(QtCore.QSize(630, 570))
+        chatWindow.setWindowIcon(QIcon('chat.ico'))
         self.centralwidget = QtWidgets.QWidget(chatWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)

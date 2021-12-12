@@ -7,7 +7,7 @@ from PyQt5.QtGui import QIcon
 class Ui_signUp(object):
     def setupUi(self, signUp):
         signUp.setObjectName("signUp")
-        signUp.resize(400, 300)
+        signUp.setFixedSize(400, 300)
         signUp.setWindowIcon(QIcon('chat.ico'))
         self.label_3 = QtWidgets.QLabel(signUp)
         self.label_3.setGeometry(QtCore.QRect(40, 160, 55, 20))
@@ -90,14 +90,14 @@ class Dialog(QDialog):
         password = self.ui.password_lineEdit.text()
         if (not username) or (not password):
             self.ui.label_4.setGeometry(QRect(10, 70, 381, 20))
-            msg = self.show_message_box('Вы заполнили не все поля')
+            self.show_message_box('Not all fields are filled in')
             return
         self.s.send(("reg " + " name: " + username + " password: " + password).encode('utf-8'))
-        if "Зарегистрирован" in self.s.recv(1024).decode('utf-8').split() :
+        if "Зарегистрирован" in self.s.recv(1024).decode('utf-8').split():
             self.hide()
         else:
             self.ui.label_4.setGeometry(QRect(10, 70, 381, 20))
-            msg = self.show_message_box('Пользоватеть с таким именем уже зарегистрирован')
+            self.show_message_box('This user already exists')
 
 if __name__ == "__main__":
     import sys
