@@ -243,19 +243,11 @@ class messenger_(QMainWindow):
 
     def pressed_keys(self):
         print("the _pressed_keys_ function has now started working")
-        self.ui.friends_list.setIconSize(QtCore.QSize(40, 40))
-        self.current_item = self.ui.friends_comboBox.currentText()
-        item = QtWidgets.QListWidgetItem()
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(self.current_item + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        item.setIcon(icon)
-        item.setText(self.current_item)
-        self.ui.friends_list.addItem(item)
 
-        # self.username - my name
-        # self.current_item - friend's name
-        self.add_friend(self.current_item)
-        self.show_friends()
+        friend_name = self.ui.friends_comboBox.currentText()
+
+        self.add_friend(friend_name)
+        self.add_friend_widget(friend_name)
 
         self.ui.friends_comboBox.activated.disconnect(self.pressed_keys)
         self.ui.find_friends_btn.clicked.disconnect(self.pressed_keys)
@@ -321,16 +313,14 @@ class messenger_(QMainWindow):
                 print(Fore.BLUE + "the string in friends is empty")
             else:
                 print(Fore.GREEN + "the string in friends were founded")
-
-                # расписать работу с добавлением виджетов с друзьями
-
                 self.c2.execute("SELECT user, his_friend FROM friends Where user = ? ", (self.username,))
                 lines = self.c2.fetchall()
                 print("number of friends : ", len(lines))
-                for num_lines in lines:
-                    print(lines)
-                    # friend_item =
-                    # self.ui.friends_list.addItem(friend_item)
+                for line in lines:
+                    friend_name = line[1]
+                    self.add_friend_widget(friend_name)
+
+
 
 
         except:
@@ -356,6 +346,16 @@ class messenger_(QMainWindow):
                     self.con2.commit()
         except:
             print("database error in func _add_friend()_")
+
+    def add_friend_widget(self, friend_name):
+        print("the _add_friend_widget_ function has now started working")
+        self.ui.friends_list.setIconSize(QtCore.QSize(40, 40))
+        item = QtWidgets.QListWidgetItem()
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(friend_name + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        item.setIcon(icon)
+        item.setText(friend_name)
+        self.ui.friends_list.addItem(item)
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")

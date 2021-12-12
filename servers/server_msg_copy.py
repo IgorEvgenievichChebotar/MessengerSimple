@@ -36,6 +36,7 @@ def save_dialog(con, data, conn, nam, m, f, connection, addr):
     c = con.cursor()
     c.execute("""SELECT name FROM base_connection WHERE address = ?""", ((str(addr[0]) + '_' + str(addr[1])),))
     name = c.fetchone()[0]
+    print("empty message")
     message = ' '.join(data[m + 1:])
     c.execute("""SELECT * from sqlite_master where type = 'table'""")
     tables = c.fetchall()
