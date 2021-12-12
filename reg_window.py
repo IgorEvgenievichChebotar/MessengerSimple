@@ -4,6 +4,7 @@ import socket
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QIcon
 
+
 class Ui_signUp(object):
     def setupUi(self, signUp):
         signUp.setObjectName("signUp")

@@ -324,7 +324,10 @@ class messenger_(QMainWindow):
 
                 # расписать работу с добавлением виджетов с друзьями
                 '''
-                for():
+                self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
+                lines = self.c2.fetchall()
+                for num_lines in lines:
+                    print("num_lines: ", num_lines)
                     friend_item = 
                     self.ui.friends_list.addItem(friend_item)
                 '''
@@ -333,10 +336,16 @@ class messenger_(QMainWindow):
             print("database error in func _show_friends()_")
 
     def add_friend(self, friend):
-        print("the _show_friends_ function has now started working")
+        print("the _add_friend_ function has now started working")
         try:
-            self.c2.execute("INSERT INTO friends VALUES(?, ?);", (self.username, friend))
-            self.con2.commit()
+            self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
+            entry = self.c2.fetchone()
+            if entry is None:
+                print(Fore.BLUE + "the string in friends WAS CREATED")
+                self.c2.execute("INSERT INTO friends VALUES(?, ?);", (self.username, friend))
+                self.con2.commit()
+            else:
+                print(Fore.GREEN + "the string in friends were founded")
         except:
             print("database error in func _add_friend()_")
 
