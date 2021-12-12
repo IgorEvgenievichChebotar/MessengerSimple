@@ -4,6 +4,24 @@ import sqlite3
 import threading
 
 
+def Main():
+    users = {}
+    host = '127.0.0.1'
+    port = 8080
+    con = sqlite3.connect("login_data.db", check_same_thread=False)
+
+    con.execute("PRAGMA journal_mode=WAL")
+
+    c = con.cursor()
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((host, port))
+    print("socket binded to port", port)
+    s.listen(10)
+    print("socket is listening")
+    thread = threading.Thread(target=join_clients, args=(s, "helo", users, con, c))
+    thread.start()
+
+
 def join_clients(sock, a, users, con, c):
     print("the _join_clients_ function has now started working")
     while True:
@@ -28,8 +46,6 @@ def registration(data, conn, con, c):
         con.commit()
     else:
         conn.send("Такой пользователь уже существует".encode('utf-8'))
-
-
 
 
 def login(data, conn, con, c):
@@ -62,21 +78,6 @@ def receive(conn, a, addr, users, con, c):
         except:
             print("connection: ", str(addr[0]) + ' : ' + str(addr[1]), " losted")
             break
-
-
-def Main():
-    users = {}
-    host = '127.0.0.1'
-    port = 8080
-    con = sqlite3.connect("login_data.db", check_same_thread=False)
-    c = con.cursor()
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((host, port))
-    print("socket binded to port", port)
-    s.listen(10)
-    print("socket is listening")
-    thread = threading.Thread(target=join_clients, args=(s, "helo", users, con, c))
-    thread.start()
 
 
 if __name__ == '__main__':

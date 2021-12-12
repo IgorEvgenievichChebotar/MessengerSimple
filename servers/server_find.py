@@ -8,6 +8,24 @@ from colorama import init, Fore
 init(autoreset=True)
 
 
+def Main():
+    users = {}
+    host = '127.0.0.1'
+    port = 8888
+    con = sqlite3.connect("login_data.db", check_same_thread=False)
+
+    con.execute("PRAGMA journal_mode=WAL")
+
+    c = con.cursor()
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((host, port))
+    print("socket binded to port", port)
+    s.listen(10)
+    print("socket is listening")
+    thread = threading.Thread(target=join_clients, args=(s, users, c))
+    thread.start()
+
+
 def join_clients(sock, users, c):
     print("the _join_clients_ function has now started working")
     while True:
@@ -40,8 +58,6 @@ def receive(conn, addr, users, c):
             data = conn.recv(4096).decode('utf-8')
 
             print(Fore.GREEN + (str(addr[0]) + ' : ' + str(addr[1]) + " is online"))
-            status = (addr, "online")
-            conn.send(pickle.dumps(status))
 
             users[addr] = conn
             if not data:
@@ -52,25 +68,8 @@ def receive(conn, addr, users, c):
         except:
 
             print(Fore.RED + (str(addr[0]) + ' : ' + str(addr[1]) + " is offline"))
-            status = (addr, "Offline")
-            conn.send(pickle.dumps(status))
 
             break
-
-
-def Main():
-    users = {}
-    host = '127.0.0.1'
-    port = 8888
-    con = sqlite3.connect("login_data.db", check_same_thread=False)
-    c = con.cursor()
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((host, port))
-    print("socket binded to port", port)
-    s.listen(10)
-    print("socket is listening")
-    thread = threading.Thread(target=join_clients, args=(s, users, c))
-    thread.start()
 
 
 if __name__ == '__main__':

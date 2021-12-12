@@ -5,6 +5,23 @@ import pickle
 import time
 
 
+def Main():
+    host = '127.0.0.1'
+    port = 60005
+    con = sqlite3.connect("login_data.db", check_same_thread=False)
+
+    con.execute("PRAGMA journal_mode=WAL")
+
+    connection = {}
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((host, port))
+    print("socket binded to port", port)
+    s.listen(5)
+    print("socket is listening")
+    thread = threading.Thread(target=join_clients, args=(s, con, connection))
+    thread.start()
+
+
 def join_clients(sock, con, connection):
     print("the _join_clients_ function has now started working")
     while True:
@@ -149,20 +166,6 @@ def receive(conn, sock, addr, con, connection):
         print("connection: ", str(addr[0]) + ' : ' + str(addr[1]), " losted")
 
         c.close()
-
-
-def Main():
-    host = '127.0.0.1'
-    port = 60005
-    con = sqlite3.connect("login_data.db", check_same_thread=False)
-    connection = {}
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((host, port))
-    print("socket binded to port", port)
-    s.listen(5)
-    print("socket is listening")
-    thread = threading.Thread(target=join_clients, args=(s, con, connection))
-    thread.start()
 
 
 if __name__ == '__main__':

@@ -2,12 +2,15 @@ import pickle
 import socket
 import sqlite3
 import threading
+import pathlib
+import time
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
 from PyQt5.QtWidgets import *
 
 from chat_window import Ui_chatWindow
+
 
 
 class messenger_(QMainWindow):
@@ -17,7 +20,11 @@ class messenger_(QMainWindow):
         self.ui = Ui_chatWindow()
         self.ui.setupUi(self)
         self.con = sqlite3.connect("messages.db", check_same_thread=False)
+        self.con2 = sqlite3.connect(pathlib.Path.cwd().joinpath('servers').joinpath('login_data.db'),
+                                    check_same_thread=False, timeout=1)
+        self.con2.execute("PRAGMA journal_mode=WAL")
         self.c = self.con.cursor()
+        self.c2 = self.con2.cursor()
         self.username = username
         self.host = '127.0.0.1'
         self.port = 60005
@@ -212,12 +219,10 @@ class messenger_(QMainWindow):
         self.ui.friends_comboBox.clear()
         # self.ui.friends_list.takeItem(self.ui.friends_list.selectedItems()[0])
         self.ui.friends_comboBox.activated.connect(self.pressed_keys)
-        print("до friends_comboBox.activated.connect")
 
     def get_key(self, d):
         print("the _get_key_ function has now started working")
         for item in d.items():
-            print(item[0], item[1])
             f = open(item[0] + ".png", 'wb')
             f.write(item[1])
             f.close()
@@ -229,24 +234,11 @@ class messenger_(QMainWindow):
         print("the _receiv_ function has now started working")
 
         while True:
-            print("1")
             self.dataa = self.sock.recv(40960000)  # .decode('utf-8').split(",")
-            print("2")
             self.dataa = pickle.loads(self.dataa)
-            print("3")
             print(self.dataa)
-            print("len: ", len(self.dataa))
-            if len(self.dataa) == 2:
-                print("4")
-                return(self.dataa[0], self.dataa[1])
-            else:
-                print("5")
-                print("PROCESSING FIND FRIENDS")
-                print(self.dataa)
-                print("6")
-                if self.dataa:
-                    self.get_key((self.dataa))
-                    print("7")
+            if self.dataa:
+                self.get_key((self.dataa))
 
     def pressed_keys(self):
         print("the _pressed_keys_ function has now started working")
@@ -286,14 +278,19 @@ class messenger_(QMainWindow):
 
     def set_profile(self):
         print("the _set_profile_ function has now started working")
-        addr, status = self.receiv()
-        print(addr[0], addr[1], status)
-        self.ui.friend_login_label.setText(self.item)
-        self.ui.friend_activity.setText(status)
-        if "online" in status:
-            self.ui.friend_activity.setStyleSheet('color: green')
-        else:
-            self.ui.friend_activity.setStyleSheet('color: red')
+
+        try:
+            self.c2.execute("""SELECT name FROM base_connection""")
+            name = self.c2.fetchall
+            print("NAME = ", name)
+        except sqlite3.OperationalError:
+            print("database locked")
+
+        #    self.ui.friend_login_label.setText(self.item)
+        #    self.ui.friend_activity.setText("status")
+
+        #    self.ui.friend_activity.setStyleSheet('color: green')
+        #    self.ui.friend_activity.setStyleSheet('color: red')
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")
