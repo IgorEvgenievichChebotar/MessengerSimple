@@ -53,7 +53,7 @@ class messenger_(QMainWindow):
         fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
         print(fname)
         if fname:
-            self.ui.my_image.setStyleSheet("QPushButton{\n"
+            self.ui.c.setStyleSheet("QPushButton{\n"
                                                "  display: block;\n"
                                                "  box-sizing: border-box;\n"
                                                "  margin: 0 auto;\n"
@@ -174,9 +174,9 @@ class messenger_(QMainWindow):
                         'utf-8'))
                 self.ui.msg_lineEdit.clear()
             else:
-                print("нет получателя!")
+                print("no receiver")
         else:
-            print("Пустое")
+            print("empty field")
 
     def find(self):
         print("the _find_ function has now started working")
@@ -214,7 +214,6 @@ class messenger_(QMainWindow):
     def nado(self):
         print("the _nado_ function has now started working")
         self.sock.send((self.line.text()).encode('utf-8'))
-        print("send")
         self.ui.friends_comboBox.hidePopup()
         self.ui.friends_comboBox.clear()
         # self.ui.friends_list.takeItem(self.ui.friends_list.selectedItems()[0])
@@ -232,11 +231,9 @@ class messenger_(QMainWindow):
 
     def receiv(self):
         print("the _receiv_ function has now started working")
-
         while True:
             self.dataa = self.sock.recv(40960000)  # .decode('utf-8').split(",")
             self.dataa = pickle.loads(self.dataa)
-            print(self.dataa)
             if self.dataa:
                 self.get_key((self.dataa))
 
@@ -244,7 +241,6 @@ class messenger_(QMainWindow):
         print("the _pressed_keys_ function has now started working")
         self.ui.friends_list.setIconSize(QtCore.QSize(40, 40))
         self.current_item = self.ui.friends_comboBox.currentText()
-        print(self.current_item)
         item = QtWidgets.QListWidgetItem()
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(self.current_item + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -281,10 +277,15 @@ class messenger_(QMainWindow):
 
         self.ui.friend_login_label.setText(self.item)  # self.item - it`s name of selected friend
 
+        path_file = open("path_avatarka.log", 'r')
+        image_dir = path_file.read()
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(image_dir), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.ui.friend_image.setIcon(icon)
+        self.ui.friend_image.setIconSize(QtCore.QSize(100, 100))
+
         self.c2.execute("SELECT name FROM base_connection WHERE name = ?", (self.item,))
         name = self.c2.fetchone()
-        print("NAME = ", name)
-
         if name is not None:
             self.ui.friend_activity.setText("Online")
             self.ui.friend_activity.setStyleSheet('color: green')
