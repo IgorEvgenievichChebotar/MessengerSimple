@@ -238,6 +238,10 @@ class messenger_(QMainWindow):
     def show_messages(self):
         print("the _show_messages_ function has now started working")
         self.ui.msg_list.clear()
+        brush = QtGui.QBrush(QtGui.QColor(255, 225, 255))
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        itemm = self.ui.friends_list.currentItem()
+        itemm.setBackground(brush)
         self.item = self.ui.friends_list.currentItem().text()
         self.c.execute("""CREATE TABLE IF NOT EXISTS """ + '"' + self.item + '"' + """(sender TEXT, message TEXT)""")
         self.c.execute("""SELECT * FROM """'"' + self.item + '"')
@@ -336,6 +340,7 @@ class messenger_(QMainWindow):
     def delete_friend(self):
         print("the _delete_friend_ function has now started working")
         friend_name = self.ui.friend_login_label.text()
+        print(friend_name)
         try:
             self.c2.execute("DELETE FROM friends Where his_friend = ? ", (friend_name,))
             self.con2.commit()
