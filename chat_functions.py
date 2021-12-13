@@ -238,10 +238,6 @@ class messenger_(QMainWindow):
     def show_messages(self):
         print("the _show_messages_ function has now started working")
         self.ui.msg_list.clear()
-        brush = QtGui.QBrush(QtGui.QColor(255, 225, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        itemm = self.ui.friends_list.currentItem()
-        itemm.setBackground(brush)
         self.item = self.ui.friends_list.currentItem().text()
         self.c.execute("""CREATE TABLE IF NOT EXISTS """ + '"' + self.item + '"' + """(sender TEXT, message TEXT)""")
         self.c.execute("""SELECT * FROM """'"' + self.item + '"')
@@ -255,7 +251,6 @@ class messenger_(QMainWindow):
                 icon.addPixmap(QtGui.QPixmap(f[x][0] + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 add_msg.setIcon(icon)
                 add_msg.setText(mess)
-                self.ui.msg_list.setIconSize(QtCore.QSize(40, 40))
                 self.ui.msg_list.addItem(add_msg)
 
     def set_profile(self):
