@@ -19,19 +19,19 @@ class MainDialog(QMainWindow):  # main class
         self.message = b'no'  # signal message
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # creating a TCP/IP socket
         self.s.connect((self.host, self.port))  # connecting socket to the server
-        self.ui.Button_login.clicked.connect(self.login_check)  # signIn button click processing
-        self.ui.Button_registr.clicked.connect(self.sign_up_check)  # signUp button click processing
+        self.ui.singIn_btn.clicked.connect(self.login_check)  # signIn button click processing
+        self.ui.signUp_btn.clicked.connect(self.sign_up_check)  # signUp button click processing
 
     def show_message_box(self, arg):  # notification in red text about incorrect input
         print("the _show_message_box_ function has now started working")
         _translate = QCoreApplication.translate
-        self.ui.label_4.setText(_translate("MainWindow", arg))
-        self.ui.label_4.setStyleSheet('color: red')
+        self.ui.message_box_label.setText(_translate("MainWindow", arg))
+        self.ui.message_box_label.setStyleSheet('color: red')
 
-    def chat_window_show(self, username):  # opening the chat window
+    def chat_window_show(self):  # opening the chat window
         print("the _chat_window_show_ function has now started working")
-        self.main_window = messenger_(self.username)
-        self.main_window.show()
+        self.chat_window = messenger_(self.username)
+        self.chat_window.show()
 
     def reg_window_show(self):  # opening the auth window
         print("the _reg_window_show_ function has now started working")
@@ -44,8 +44,8 @@ class MainDialog(QMainWindow):  # main class
 
     def login_check(self):  # input validation and input processing (processing the signIn button)
         print("the _login_check_ function has now started working")
-        self.username = self.ui.lineEdit.text()
-        self.password = self.ui.lineEdit_2.text()
+        self.username = self.ui.login_lineEdit.text()
+        self.password = self.ui.password_lineEdit.text()
         if (not self.username) or (not self.password):
             self.show_message_box("Not all fields are filled in")
             return
@@ -55,7 +55,7 @@ class MainDialog(QMainWindow):  # main class
         self.data = self.s.recv(1024).decode('utf-8').split()
         if "выполнен" in self.data:
             print("signed in")
-            self.chat_window_show(self.username)
+            self.chat_window_show()
             self.hide()
             self.s.close()
         elif "существует" in self.data:

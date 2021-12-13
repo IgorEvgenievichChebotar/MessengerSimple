@@ -1,6 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
-import socket
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QIcon
 
@@ -10,54 +9,39 @@ class Ui_signUp(object):
         signUp.setObjectName("signUp")
         signUp.setFixedSize(400, 300)
         signUp.setWindowIcon(QIcon('chat.ico'))
-        self.label_3 = QtWidgets.QLabel(signUp)
-        self.label_3.setGeometry(QtCore.QRect(40, 160, 55, 20))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI Variable")
-        self.label_3.setFont(font)
-        self.label_3.setObjectName("label_3")
-        self.label_2 = QtWidgets.QLabel(signUp)
-        self.label_2.setGeometry(QtCore.QRect(50, 110, 55, 20))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI Variable")
-        self.label_2.setFont(font)
-        self.label_2.setObjectName("label_2")
-        self.password_lineEdit = QtWidgets.QLineEdit(signUp)
-        self.password_lineEdit.setGeometry(QtCore.QRect(110, 150, 181, 35))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI Variable")
-        self.password_lineEdit.setFont(font)
-        self.password_lineEdit.setObjectName("password_lineEdit")
-        self.label = QtWidgets.QLabel(signUp)
-        self.label.setGeometry(QtCore.QRect(120, 30, 161, 35))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI Variable")
-        font.setPointSize(14)
-        self.label.setFont(font)
-        self.label.setObjectName("label")
-        self.uname_lineEdit = QtWidgets.QLineEdit(signUp)
-        self.uname_lineEdit.setGeometry(QtCore.QRect(110, 100, 181, 35))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI Variable")
-        self.uname_lineEdit.setFont(font)
-        self.uname_lineEdit.setObjectName("uname_lineEdit")
-        self.label_4 = QtWidgets.QLabel(signUp)
-        self.label_4.setGeometry(QtCore.QRect(10, 70, 381, 20))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI Variable")
-        self.label_4.setFont(font)
-        self.label_4.setAutoFillBackground(False)
-        self.label_4.setLineWidth(-1)
-        self.label_4.setMidLineWidth(0)
-        self.label_4.setText("")
-        self.label_4.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_4.setObjectName("label_4")
-        self.signup_btn = QtWidgets.QPushButton(signUp)
-        self.signup_btn.setGeometry(QtCore.QRect(110, 220, 181, 50))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI Variable")
-        self.signup_btn.setFont(font)
-        self.signup_btn.setObjectName("signup_btn")
+        self.signUp_password_label = QtWidgets.QLabel(signUp)
+        self.signUp_password_label.setGeometry(QtCore.QRect(40, 160, 55, 20))
+        self.signUp_password_label.setFont(QtGui.QFont("Segoe UI Variable"))
+        self.signUp_password_label.setObjectName("label_3")
+        self.signUp_login_label = QtWidgets.QLabel(signUp)
+        self.signUp_login_label.setGeometry(QtCore.QRect(50, 110, 55, 20))
+        self.signUp_login_label.setFont(QtGui.QFont("Segoe UI Variable"))
+        self.signUp_login_label.setObjectName("label_2")
+        self.signUp_password_lineEdit = QtWidgets.QLineEdit(signUp)
+        self.signUp_password_lineEdit.setGeometry(QtCore.QRect(110, 150, 181, 35))
+        self.signUp_password_lineEdit.setFont(QtGui.QFont("Segoe UI Variable"))
+        self.signUp_password_lineEdit.setObjectName("password_lineEdit")
+        self.signUp_label_creatAcc = QtWidgets.QLabel(signUp)
+        self.signUp_label_creatAcc.setGeometry(QtCore.QRect(138, 30, 161, 35))
+        self.signUp_label_creatAcc.setFont(QtGui.QFont("Segoe UI Variable",14))
+        self.signUp_label_creatAcc.setObjectName("label")
+        self.signUp_login_lineEdit = QtWidgets.QLineEdit(signUp)
+        self.signUp_login_lineEdit.setGeometry(QtCore.QRect(110, 100, 181, 35))
+        self.signUp_login_lineEdit.setFont(QtGui.QFont("Segoe UI Variable"))
+        self.signUp_login_lineEdit.setObjectName("uname_lineEdit")
+        self.message_box_label = QtWidgets.QLabel(signUp)
+        self.message_box_label.setGeometry(QtCore.QRect(10, 70, 381, 20))
+        self.message_box_label.setFont(QtGui.QFont("Segoe UI Variable"))
+        self.message_box_label.setAutoFillBackground(False)
+        self.message_box_label.setLineWidth(-1)
+        self.message_box_label.setMidLineWidth(0)
+        self.message_box_label.setText("")
+        self.message_box_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.message_box_label.setObjectName("label_4")
+        self.signUp_btn_reg = QtWidgets.QPushButton(signUp)
+        self.signUp_btn_reg.setGeometry(QtCore.QRect(110, 220, 181, 50))
+        self.signUp_btn_reg.setFont(QtGui.QFont("Segoe UI Variable"))
+        self.signUp_btn_reg.setObjectName("signup_btn")
 
         self.retranslateUi(signUp)
         QtCore.QMetaObject.connectSlotsByName(signUp)
@@ -65,10 +49,10 @@ class Ui_signUp(object):
     def retranslateUi(self, signUp):
         _translate = QtCore.QCoreApplication.translate
         signUp.setWindowTitle(_translate("signUp", "regWindow"))
-        self.label_3.setText(_translate("signUp", "password"))
-        self.label_2.setText(_translate("signUp", "login"))
-        self.label.setText(_translate("signUp", "Create account"))
-        self.signup_btn.setText(_translate("signUp", "SignUp"))
+        self.signUp_password_label.setText(_translate("signUp", "password"))
+        self.signUp_login_label.setText(_translate("signUp", "login"))
+        self.signUp_label_creatAcc.setText(_translate("signUp", "Create account"))
+        self.signUp_btn_reg.setText(_translate("signUp", "SignUp"))
 
 class Dialog(QDialog):
     def __init__(self, s, parent=None):
@@ -76,28 +60,25 @@ class Dialog(QDialog):
         self.ui = Ui_signUp()
         self.ui.setupUi(self)
         self.parent = parent
-        self.host = '127.0.0.1'
-        self.port = 8080
         self.message = b'no'
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.connect((self.host, self.port))
-        self.ui.signup_btn.clicked.connect(self.insert_data)
+        self.s = s
+        self.ui.signUp_btn_reg.clicked.connect(self.insert_data)
     def show_message_box(self,arg):
         _translate = QCoreApplication.translate
-        self.ui.label_4.setText(_translate("MainWindow", arg))
-        self.ui.label_4.setStyleSheet('color: red')
+        self.ui.message_box_label.setText(_translate("MainWindow", arg))
+        self.ui.message_box_label.setStyleSheet('color: red')
     def insert_data(self):
-        username = self.ui.uname_lineEdit.text()
-        password = self.ui.password_lineEdit.text()
+        username = self.ui.signUp_login_lineEdit.text()
+        password = self.ui.signUp_password_lineEdit.text()
         if (not username) or (not password):
-            self.ui.label_4.setGeometry(QRect(10, 70, 381, 20))
+            self.ui.message_box_label.setGeometry(QRect(10, 70, 381, 20))
             self.show_message_box('Not all fields are filled in')
             return
         self.s.send(("reg " + " name: " + username + " password: " + password).encode('utf-8'))
         if "Зарегистрирован" in self.s.recv(1024).decode('utf-8').split():
             self.hide()
         else:
-            self.ui.label_4.setGeometry(QRect(10, 70, 381, 20))
+            self.ui.message_box_label.setGeometry(QRect(10, 70, 381, 20))
             self.show_message_box('This user already exists')
 
 if __name__ == "__main__":

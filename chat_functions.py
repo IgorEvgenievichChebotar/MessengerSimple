@@ -3,6 +3,7 @@ import pickle
 import socket
 import sqlite3
 import threading
+import pathlib
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
@@ -56,22 +57,6 @@ class messenger_(QMainWindow):
         fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
         print(fname)
         if fname:
-            self.ui.c.setStyleSheet("QPushButton{\n"
-                                    "  display: block;\n"
-                                    "  box-sizing: border-box;\n"
-                                    "  margin: 0 auto;\n"
-                                    "  padding: 8px;\n"
-                                    "  width: 80%;\n"
-                                    "  max-width: 200px;\n"
-                                    "  background: #fff; /* запасной цвет для старых браузеров */\n"
-                                    "  background: rgba(255, 255, 255,0);\n"
-                                    "  border-radius: 8px;\n"
-                                    "  color: #fff;\n"
-                                    "  text-align: center;\n"
-                                    "  text-decoration: none;\n"
-                                    "  letter-spacing: 1px;\n"
-                                    "  transition: all 0.3s ease-out;\n"
-                                    "}")
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(fname), QtGui.QIcon.Normal, QtGui.QIcon.Off)
             self.ui.my_image.setIcon(icon)
@@ -193,7 +178,6 @@ class messenger_(QMainWindow):
         self.line = self.ui.friends_comboBox.lineEdit()
 
         self.ui.friends_list.itemClicked.connect(self.show_messages)
-        self.ui.friends_list.itemClicked.connect(self.set_profile)
 
         self.line.returnPressed.connect(self.nado)
 
@@ -256,14 +240,18 @@ class messenger_(QMainWindow):
                 add_msg.setIcon(icon)
                 add_msg.setText(mess)
                 self.ui.msg_list.addItem(add_msg)
+        self.set_profile(self.item)
 
-    def set_profile(self):
+    def set_profile(self, friend_name):
         print("the _set_profile_ function has now started working")
-        # self.username - my name
-        # self.item - friend's name
 
         path_file = open("path_avatarka.log", 'r')
         image_dir = path_file.read()
+        print(image_dir)
+
+        friend_image_dir = pathlib.Path.cwd().joinpath(friend_name + ".png")
+        print(friend_image_dir)
+
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(image_dir), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.ui.friend_image.setIcon(icon)
