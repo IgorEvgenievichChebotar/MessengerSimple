@@ -195,7 +195,7 @@ class messenger_(QMainWindow):
 
         self.ui.friends_list.itemClicked.connect(self.msg_list)
         self.ui.friends_list.itemClicked.connect(self.set_profile)
-        self.ui.friends_list.doubleClicked.connect(self.delete_friend_widget)
+        self.ui.friends_list.doubleClicked.connect(self.delete_friend)
 
         self.line.returnPressed.connect(self.nado)
 
@@ -340,14 +340,15 @@ class messenger_(QMainWindow):
         item.setText(friend_name)
         self.ui.friends_list.addItem(item)
 
-    def delete_friend_widget(self):
-        print("the _delete_friend_widget_ function has now started working")
+    def delete_friend(self):
+        print("the _delete_friend_ function has now started working")
         friend_name = self.ui.friend_login_label.text()
         try:
-            self.c2.execute("DELETE FROM his_friend Where Name = ? ", (friend_name,))
+            self.c2.execute("DELETE FROM friends Where his_friend = ? ", (friend_name,))
             self.con2.commit()
         except:
-            print("DB ERROR")
+            print("database error in func _delete_friend()_")
+        self.show_friends()
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")
