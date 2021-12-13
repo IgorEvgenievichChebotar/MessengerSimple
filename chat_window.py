@@ -165,7 +165,7 @@ class Ui_chatWindow(object):
         font.setFamily("Segoe UI Variable")
         font.setPointSize(8)
         self.my_activity.setFont(font)
-        self.my_activity.setStyleSheet("color: rgb(0, 160, 0);")
+        self.my_activity.setStyleSheet("color: green;")
         self.my_activity.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.my_activity.setObjectName("my_activity")
         self.gridLayout.addWidget(self.my_activity, 2, 1, 1, 2)

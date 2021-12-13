@@ -39,7 +39,7 @@ class messenger_(QMainWindow):
         self.handler()
         self.thread_1 = threading.Thread(target=self.receive)
         self.thread_1.start()
-        self.ui.msg_lineEdit.returnPressed.connect(self.clicked_but)
+        self.ui.msg_lineEdit.returnPressed.connect(self.send_message)
         self.ui.my_image.clicked.connect(self.change_image)
 
         path_file = open("path_avatarka.log", 'r')
@@ -50,7 +50,6 @@ class messenger_(QMainWindow):
         self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
 
         self.refresh_friends()
-
 
     def change_image(self):
         print("the _change_image_ function has now started working")
@@ -89,7 +88,7 @@ class messenger_(QMainWindow):
 
     def handler(self):
         print("the _handler_ function has now started working")
-        self.ui.send_msg_btn.clicked.connect(self.clicked_but)
+        self.ui.send_msg_btn.clicked.connect(self.send_message)
 
     def receive(self):
         print("the _receive_ function has now started working")
@@ -155,8 +154,8 @@ class messenger_(QMainWindow):
             # self.guest_message = str('Received from ' + sender +': '+ message_)
             # self.ui.plainTextEdit.appendPlainText(self.guest_message)
 
-    def clicked_but(self):
-        print("the _clicked_but_ function has now started working")
+    def send_message(self):
+        print("the _send_message_ function has now started working")
         self.msg = self.ui.msg_lineEdit.text().split()
         if self.msg:
             print(self.msg)
@@ -193,7 +192,7 @@ class messenger_(QMainWindow):
         self.new_thread.start()
         self.line = self.ui.friends_comboBox.lineEdit()
 
-        self.ui.friends_list.itemClicked.connect(self.msg_list)
+        self.ui.friends_list.itemClicked.connect(self.show_messages)
         self.ui.friends_list.itemClicked.connect(self.set_profile)
 
         self.line.returnPressed.connect(self.nado)
@@ -236,8 +235,8 @@ class messenger_(QMainWindow):
         self.ui.friends_comboBox.activated.disconnect(self.pressed_keys)
         self.ui.find_friends_btn.clicked.disconnect(self.pressed_keys)
 
-    def msg_list(self):
-        print("the _msg_list_ function has now started working")
+    def show_messages(self):
+        print("the _show_messages_ function has now started working")
         self.ui.msg_list.clear()
         brush = QtGui.QBrush(QtGui.QColor(255, 225, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -275,13 +274,13 @@ class messenger_(QMainWindow):
         name = self.c2.fetchone()
         if name is not None:
             self.ui.friend_login_label.setText(self.item)
-            print(self.item)
-            self.ui.friend_activity.setText("Online")
+            print(self.item, "online")
+            self.ui.friend_activity.setText("online")
             self.ui.friend_activity.setStyleSheet('color: green')
         else:
             self.ui.friend_login_label.setText(self.item)
-            print(self.item)
-            self.ui.friend_activity.setText("Offline")
+            print(self.item, "offline")
+            self.ui.friend_activity.setText("offline")
             self.ui.friend_activity.setStyleSheet('color: red')
 
     def refresh_friends(self):

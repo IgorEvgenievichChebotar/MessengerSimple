@@ -13,14 +13,14 @@ class MainDialog(QMainWindow):  # main class
     def __init__(self, parent=None):  # constructor
         super(MainDialog, self).__init__(parent)  # connecting parent class
         self.ui = Ui_authWindow()  # connecting class
-        self.ui.setupUi(self)
+        self.ui.setupUi(self)  # ui initialization
         self.host = '127.0.0.1'  # creating host
         self.port = 8080  # creating port
         self.message = b'no'  # signal message
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # creating a TCP/IP socket
         self.s.connect((self.host, self.port))  # connecting socket to the server
-        self.ui.Button_login.clicked.connect(self.login_check)  # signin button click processing
-        self.ui.Button_registr.clicked.connect(self.sign_up_check)  # signup button click processing
+        self.ui.Button_login.clicked.connect(self.login_check)  # signIn button click processing
+        self.ui.Button_registr.clicked.connect(self.sign_up_check)  # signUp button click processing
 
     def show_message_box(self, arg):  # notification in red text about incorrect input
         print("the _show_message_box_ function has now started working")
