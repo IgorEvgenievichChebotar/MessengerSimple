@@ -247,7 +247,6 @@ class messenger_(QMainWindow):
         except:
             print("database error in func _refresh_messages()_")
         lines = self.c.fetchall()
-        print(lines)
         if lines is not None:
             for line in lines:
                 message = line[1]
@@ -299,6 +298,7 @@ class messenger_(QMainWindow):
 
     def refresh_friends(self):
         print("the _refresh_friends_ function has now started working")
+        self.ui.friends_list.clear()
         try:
             self.c2.execute("""CREATE TABLE IF NOT EXISTS friends(
                user TEXT,
@@ -306,20 +306,19 @@ class messenger_(QMainWindow):
             """)
             self.con2.commit()
             self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
-            entry = self.c2.fetchone()
         except:
             print("database error in func _refresh_friends()_")
-            self.ui.friends_list.clear()
-            if entry is None:
-                print(Fore.BLUE + "the string in friends is empty")
-            else:
-                print(Fore.GREEN + "the string in friends were founded")
-                self.c2.execute("SELECT user, his_friend FROM friends Where user = ? ", (self.username,))
-                lines = self.c2.fetchall()
-                print("number of friends : ", len(lines))
-                for line in lines:
-                    friend_name = line[1]
-                    self.add_friend_widget(friend_name)
+        entry = self.c2.fetchone()
+        if entry is None:
+            print(Fore.BLUE + "the string in friends is empty")
+        else:
+            print(Fore.GREEN + "the string in friends were founded")
+            self.c2.execute("SELECT user, his_friend FROM friends Where user = ? ", (self.username,))
+            lines = self.c2.fetchall()
+            print("number of friends : ", len(lines))
+            for line in lines:
+                friend_name = line[1]
+                self.add_friend_widget(friend_name)
 
     def add_friend(self, friend):
         print("the _add_friend_ function has now started working")
