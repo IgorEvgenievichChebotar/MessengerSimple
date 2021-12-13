@@ -51,6 +51,41 @@ class messenger_(QMainWindow):
 
         self.refresh_friends()
 
+    def change_image(self):
+        print("the _change_image_ function has now started working")
+        fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
+        print(fname)
+        if fname:
+            self.ui.c.setStyleSheet("QPushButton{\n"
+                                    "  display: block;\n"
+                                    "  box-sizing: border-box;\n"
+                                    "  margin: 0 auto;\n"
+                                    "  padding: 8px;\n"
+                                    "  width: 80%;\n"
+                                    "  max-width: 200px;\n"
+                                    "  background: #fff; /* запасной цвет для старых браузеров */\n"
+                                    "  background: rgba(255, 255, 255,0);\n"
+                                    "  border-radius: 8px;\n"
+                                    "  color: #fff;\n"
+                                    "  text-align: center;\n"
+                                    "  text-decoration: none;\n"
+                                    "  letter-spacing: 1px;\n"
+                                    "  transition: all 0.3s ease-out;\n"
+                                    "}")
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(fname), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            self.ui.my_image.setIcon(icon)
+            self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
+            f = open("path_avatarka.log", 'w')
+            f.write(fname)
+            f.close()
+        else:
+            f = open("path_avatarka.log", 'r')
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(f.read()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            self.ui.my_image.setIcon(icon)
+            self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
+
     def handler(self):
         print("the _handler_ function has now started working")
         self.ui.send_msg_btn.clicked.connect(self.send_message)
@@ -119,6 +154,33 @@ class messenger_(QMainWindow):
             # self.guest_message = str('Received from ' + sender +': '+ message_)
             # self.ui.plainTextEdit.appendPlainText(self.guest_message)
 
+    def send_message(self):
+        print("the _send_message_ function has now started working")
+        self.msg = self.ui.msg_lineEdit.text().split()
+        if self.msg:
+            print(self.msg)
+            self.message = self.msg[0:]
+            self.message = ' '.join(self.message)
+            add_msg = QtWidgets.QListWidgetItem()
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(self.username + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            add_msg.setIcon(icon)
+            add_msg.setText(self.message)
+            self.ui.msg_list.addItem(add_msg)
+            # self.item = self.ui.friends_list.currentItem()
+            if self.item:
+                self.c.execute("""INSERT INTO""" + '"' + self.item + '"' + """VALUES (?,?)""",
+                               (self.username, self.message,))
+                self.con.commit()
+                self.s.send(
+                    ("sender: " + self.username + " receiver: " + self.item + " message: " + self.message).encode(
+                        'utf-8'))
+                self.ui.msg_lineEdit.clear()
+            else:
+                print("no receiver")
+        else:
+            print("empty field")
+
     def find(self):
         print("the _find_ function has now started working")
         host = '127.0.0.1'
@@ -130,7 +192,7 @@ class messenger_(QMainWindow):
         self.new_thread.start()
         self.line = self.ui.friends_comboBox.lineEdit()
 
-        self.ui.friends_list.itemClicked.connect(self.refresh_messages)
+        self.ui.friends_list.itemClicked.connect(self.show_messages)
         self.ui.friends_list.itemClicked.connect(self.set_profile)
 
         self.line.returnPressed.connect(self.nado)
@@ -173,103 +235,28 @@ class messenger_(QMainWindow):
         self.ui.friends_comboBox.activated.disconnect(self.pressed_keys)
         self.ui.find_friends_btn.clicked.disconnect(self.pressed_keys)
 
-    def change_image(self):
-        print("the _change_image_ function has now started working")
-        fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
-        print(fname)
-        if fname:
-            self.ui.c.setStyleSheet("QPushButton{\n"
-                                    "  display: block;\n"
-                                    "  box-sizing: border-box;\n"
-                                    "  margin: 0 auto;\n"
-                                    "  padding: 8px;\n"
-                                    "  width: 80%;\n"
-                                    "  max-width: 200px;\n"
-                                    "  background: #fff; /* запасной цвет для старых браузеров */\n"
-                                    "  background: rgba(255, 255, 255,0);\n"
-                                    "  border-radius: 8px;\n"
-                                    "  color: #fff;\n"
-                                    "  text-align: center;\n"
-                                    "  text-decoration: none;\n"
-                                    "  letter-spacing: 1px;\n"
-                                    "  transition: all 0.3s ease-out;\n"
-                                    "}")
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(fname), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.ui.my_image.setIcon(icon)
-            self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
-            f = open("path_avatarka.log", 'w')
-            f.write(fname)
-            f.close()
-        else:
-            f = open("path_avatarka.log", 'r')
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(f.read()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.ui.my_image.setIcon(icon)
-            self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
-
-    def send_message(self):
-        print("the _send_message_ function has now started working")
-        self.msg = self.ui.msg_lineEdit.text().split()
-        if self.msg:
-            print(self.msg)
-            self.message = self.msg[0:]
-            self.message = ' '.join(self.message)
-            add_msg = QtWidgets.QListWidgetItem()
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(self.username + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            add_msg.setIcon(icon)
-            add_msg.setText(self.message)
-            self.ui.msg_list.addItem(add_msg)
-            # self.item = self.ui.friends_list.currentItem()
-            if self.item:
-                self.c.execute("""INSERT INTO""" + '"' + self.item + '"' + """VALUES (?,?)""",
-                               (self.username, self.message,))
-                self.con.commit()
-                self.s.send(
-                    ("sender: " + self.username + " receiver: " + self.item + " message: " + self.message).encode(
-                        'utf-8'))
-                self.ui.msg_lineEdit.clear()
-            else:
-                print("no receiver")
-        else:
-            print("empty field")
-
-    def refresh_messages(self):
-        print("the _refresh_messages_ function has now started working")
+    def show_messages(self):
+        print("the _show_messages_ function has now started working")
         self.ui.msg_list.clear()
+        brush = QtGui.QBrush(QtGui.QColor(255, 225, 255))
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        itemm = self.ui.friends_list.currentItem()
+        itemm.setBackground(brush)
         self.item = self.ui.friends_list.currentItem().text()
-        try:
-            self.c.execute(
-                """CREATE TABLE IF NOT EXISTS """ + '"' + self.item + '"' + """(sender TEXT, message TEXT)"""
-            )
-            self.c.execute("""SELECT * FROM """'"' + self.item + '"')
-        except:
-            print("database error in func _refresh_messages()_")
-        lines = self.c.fetchall()
-        if lines is not None:
-            for line in lines:
-                message = line[1]
-                sender = line[0]
-                if sender == self.username:
-                    self.add_message_widget(message)
-        else:
-            print(Fore.BLUE + "the string in messages is empty")
-
-    def add_message_widget(self, message):
-        print("the _add_message_widget_ function has now started working")
-        add_msg = QtWidgets.QListWidgetItem()
-        # icon = QtGui.QIcon()
-        # icon.addPixmap(QtGui.QPixmap(f[x][0] + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        # add_msg.setIcon(icon)
-
-        #     icon = QtGui.QIcon()
-        #     icon.addPixmap(QtGui.QPixmap(friend_name + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        #     item.setIcon(icon)
-
-        add_msg.setText(message)
-        self.ui.msg_list.setIconSize(QtCore.QSize(40, 40))
-        self.ui.msg_list.addItem(add_msg)
+        self.c.execute("""CREATE TABLE IF NOT EXISTS """ + '"' + self.item + '"' + """(sender TEXT, message TEXT)""")
+        self.c.execute("""SELECT * FROM """'"' + self.item + '"')
+        f = self.c.fetchall()
+        if f is not None:
+            for x in range(0, len(f)):
+                mess = f[x][1:]
+                mess = ".".join(mess)
+                add_msg = QtWidgets.QListWidgetItem()
+                icon = QtGui.QIcon()
+                icon.addPixmap(QtGui.QPixmap(f[x][0] + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                add_msg.setIcon(icon)
+                add_msg.setText(mess)
+                self.ui.msg_list.setIconSize(QtCore.QSize(40, 40))
+                self.ui.msg_list.addItem(add_msg)
 
     def set_profile(self):
         print("the _set_profile_ function has now started working")
@@ -298,7 +285,6 @@ class messenger_(QMainWindow):
 
     def refresh_friends(self):
         print("the _refresh_friends_ function has now started working")
-        self.ui.friends_list.clear()
         try:
             self.c2.execute("""CREATE TABLE IF NOT EXISTS friends(
                user TEXT,
@@ -306,19 +292,20 @@ class messenger_(QMainWindow):
             """)
             self.con2.commit()
             self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
+            entry = self.c2.fetchone()
+            self.ui.friends_list.clear()
+            if entry is None:
+                print(Fore.BLUE + "the string in friends is empty")
+            else:
+                print(Fore.GREEN + "the string in friends were founded")
+                self.c2.execute("SELECT user, his_friend FROM friends Where user = ? ", (self.username,))
+                lines = self.c2.fetchall()
+                print("number of friends : ", len(lines))
+                for line in lines:
+                    friend_name = line[1]
+                    self.add_friend_widget(friend_name)
         except:
             print("database error in func _refresh_friends()_")
-        entry = self.c2.fetchone()
-        if entry is None:
-            print(Fore.BLUE + "the string in friends is empty")
-        else:
-            print(Fore.GREEN + "the string in friends were founded")
-            self.c2.execute("SELECT user, his_friend FROM friends Where user = ? ", (self.username,))
-            lines = self.c2.fetchall()
-            print("number of friends : ", len(lines))
-            for line in lines:
-                friend_name = line[1]
-                self.add_friend_widget(friend_name)
 
     def add_friend(self, friend):
         print("the _add_friend_ function has now started working")
