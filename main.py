@@ -1,26 +1,26 @@
-import socket
-import sys
+import socket  # importing lib
+import sys  # importing lib
 
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *  # importing lib
+from PyQt5.QtWidgets import *  # importing lib
 
-from auth_window import Ui_authWindow
-from reg_window import Dialog
-from chat_functions import messenger_
+from auth_window import Ui_authWindow  # importing ui class
+from reg_window import Dialog  # importing ui+func class
+from chat_functions import messenger_  # importing ui+func class
 
 
-class MainDialog(QMainWindow):
-    def __init__(self, parent=None):
-        super(MainDialog, self).__init__(parent)
-        self.ui = Ui_authWindow()
+class MainDialog(QMainWindow):  # main class
+    def __init__(self, parent=None):  # constructor
+        super(MainDialog, self).__init__(parent)  # connecting parent class
+        self.ui = Ui_authWindow()  # connecting class
         self.ui.setupUi(self)
-        self.host = '127.0.0.1'
-        self.port = 8080
-        self.message = b'no'
+        self.host = '127.0.0.1'  # creating host
+        self.port = 8080  # creating port
+        self.message = b'no'  # signal message
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # creating a TCP/IP socket
         self.s.connect((self.host, self.port))  # connecting socket to the server
-        self.ui.Button_login.clicked.connect(self.login_check)
-        self.ui.Button_registr.clicked.connect(self.sign_up_check)
+        self.ui.Button_login.clicked.connect(self.login_check)  # signin button click processing
+        self.ui.Button_registr.clicked.connect(self.sign_up_check)  # signup button click processing
 
     def show_message_box(self, arg):  # notification in red text about incorrect input
         print("the _show_message_box_ function has now started working")
@@ -46,7 +46,6 @@ class MainDialog(QMainWindow):
         print("the _login_check_ function has now started working")
         self.username = self.ui.lineEdit.text()
         self.password = self.ui.lineEdit_2.text()
-
         if (not self.username) or (not self.password):
             self.show_message_box("Not all fields are filled in")
             return
@@ -67,12 +66,12 @@ class MainDialog(QMainWindow):
             self.show_message_box('Unknown error')
 
 
-def main():
+def main():  # main function
     app = QApplication(sys.argv)
     window = MainDialog()
     window.show()
     app.exec_()
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # starts main() if the file in which it is located is active
     main()

@@ -195,7 +195,6 @@ class messenger_(QMainWindow):
 
         self.ui.friends_list.itemClicked.connect(self.msg_list)
         self.ui.friends_list.itemClicked.connect(self.set_profile)
-        self.ui.friends_list.doubleClicked.connect(self.delete_friend)
 
         self.line.returnPressed.connect(self.nado)
 
@@ -293,23 +292,16 @@ class messenger_(QMainWindow):
                his_friend TEXT);
             """)
             self.con2.commit()
-
             self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
             entry = self.c2.fetchone()
-
             self.ui.friends_list.clear()
-
             if entry is None:
                 print(Fore.BLUE + "the string in friends is empty")
             else:
                 print(Fore.GREEN + "the string in friends were founded")
-
                 self.c2.execute("SELECT user, his_friend FROM friends Where user = ? ", (self.username,))
                 lines = self.c2.fetchall()
                 print("number of friends : ", len(lines))
-
-
-
                 for line in lines:
                     friend_name = line[1]
                     self.add_friend_widget(friend_name)
@@ -356,6 +348,14 @@ class messenger_(QMainWindow):
         except:
             print("database error in func _delete_friend()_")
         self.refresh_friends()
+
+    def contextMenuEvent(self, event):
+        print("the _contextMenuEvent_ function has now started working")
+        menu = QMenu(self)
+        del_friend = menu.addAction("Delete friend")
+        action = menu.exec_(self.mapToGlobal(event.pos()))
+        if action == del_friend:
+            self.delete_friend()
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")
