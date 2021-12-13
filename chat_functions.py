@@ -49,7 +49,7 @@ class messenger_(QMainWindow):
         self.ui.my_image.setIcon(icon)
         self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
 
-        self.show_friends()
+        self.refresh_friends()
 
 
     def change_image(self):
@@ -285,8 +285,8 @@ class messenger_(QMainWindow):
             self.ui.friend_activity.setText("Offline")
             self.ui.friend_activity.setStyleSheet('color: red')
 
-    def show_friends(self):
-        print("the _show_friends_ function has now started working")
+    def refresh_friends(self):
+        print("the _refresh_friends_ function has now started working")
         try:
             self.c2.execute("""CREATE TABLE IF NOT EXISTS friends(
                user TEXT,
@@ -296,18 +296,25 @@ class messenger_(QMainWindow):
 
             self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
             entry = self.c2.fetchone()
+
+            self.ui.friends_list.clear()
+
             if entry is None:
                 print(Fore.BLUE + "the string in friends is empty")
             else:
                 print(Fore.GREEN + "the string in friends were founded")
+
                 self.c2.execute("SELECT user, his_friend FROM friends Where user = ? ", (self.username,))
                 lines = self.c2.fetchall()
                 print("number of friends : ", len(lines))
+
+
+
                 for line in lines:
                     friend_name = line[1]
                     self.add_friend_widget(friend_name)
         except:
-            print("database error in func _show_friends()_")
+            print("database error in func _refresh_friends()_")
 
     def add_friend(self, friend):
         print("the _add_friend_ function has now started working")
@@ -348,7 +355,7 @@ class messenger_(QMainWindow):
             self.con2.commit()
         except:
             print("database error in func _delete_friend()_")
-        self.show_friends()
+        self.refresh_friends()
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")
