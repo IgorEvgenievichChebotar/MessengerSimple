@@ -42,8 +42,6 @@ class messenger_(QMainWindow):
         self.ui.msg_lineEdit.returnPressed.connect(self.clicked_but)
         self.ui.my_image.clicked.connect(self.change_image)
 
-        self.ui.friends_list.itemClicked.connect(self.context_menu_event)
-
         path_file = open("path_avatarka.log", 'r')
         image_dir = path_file.read()
         icon = QtGui.QIcon()
@@ -194,26 +192,12 @@ class messenger_(QMainWindow):
         self.new_thread = threading.Thread(target=self.receiv)
         self.new_thread.start()
         self.line = self.ui.friends_comboBox.lineEdit()
+
         self.ui.friends_list.itemClicked.connect(self.msg_list)
         self.ui.friends_list.itemClicked.connect(self.set_profile)
-        self.line.returnPressed.connect(self.nado)
+        self.ui.friends_list.doubleClicked.connect(self.delete_friend_widget)
 
-    def context_menu_event(self, event):
-        print("the _context_menu_event_ function has now started working")
-        self.menu = QMenu(self)
-        print("1")
-        action = self.menu.addAction("Delete friend")
-        print("2")
-        action_1 = self.menu.addAction("*Unassigned action*")
-        print("3")
-        result = self.menu.exec_(self.mapToGlobal(event.pos()))
-        print("4")
-        if action == result:
-            print("5")
-            self.delete_friend_widget()
-        elif action_1 == result:
-            print("6")
-            print("press")
+        self.line.returnPressed.connect(self.nado)
 
     def nado(self):
         print("the _nado_ function has now started working")
@@ -292,10 +276,12 @@ class messenger_(QMainWindow):
         name = self.c2.fetchone()
         if name is not None:
             self.ui.friend_login_label.setText(self.item)
+            print(self.item)
             self.ui.friend_activity.setText("Online")
             self.ui.friend_activity.setStyleSheet('color: green')
         else:
             self.ui.friend_login_label.setText(self.item)
+            print(self.item)
             self.ui.friend_activity.setText("Offline")
             self.ui.friend_activity.setStyleSheet('color: red')
 
@@ -320,10 +306,6 @@ class messenger_(QMainWindow):
                 for line in lines:
                     friend_name = line[1]
                     self.add_friend_widget(friend_name)
-
-
-
-
         except:
             print("database error in func _show_friends()_")
 
@@ -360,8 +342,12 @@ class messenger_(QMainWindow):
 
     def delete_friend_widget(self):
         print("the _delete_friend_widget_ function has now started working")
-        self.ui.friends_list.takeItem(0)
-
+        friend_name = self.ui.friend_login_label.text()
+        try:
+            self.c2.execute("DELETE FROM his_friend Where Name = ? ", (friend_name,))
+            self.con2.commit()
+        except:
+            print("DB ERROR")
 
     def closeEvent(self, event):
         print("the _closeEvent_ function has now started working")
