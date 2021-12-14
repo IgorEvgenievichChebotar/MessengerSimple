@@ -246,11 +246,7 @@ class messenger_(QMainWindow):  # main class
 
         path_file = open("path_avatarka.log", 'r')
         image_dir = path_file.read()
-        print(image_dir)
-
-        friend_image_dir = pathlib.Path.cwd().joinpath(friend_name + ".png")
-        print(friend_image_dir)
-
+        
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(image_dir), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.ui.friend_image.setIcon(icon)
