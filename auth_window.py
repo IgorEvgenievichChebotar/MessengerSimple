@@ -1,5 +1,5 @@
-from PyQt5 import QtCore, QtGui, QtWidgets  # importing lib
-from PyQt5.QtGui import QIcon  # importing lib
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon
 
 
 class Ui_authWindow(object):  # ui class

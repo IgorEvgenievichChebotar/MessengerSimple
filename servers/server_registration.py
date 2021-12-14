@@ -4,14 +4,12 @@ import sqlite3
 import threading
 
 
-def Main():
+def Main():  # main func
     users = {}
     host = '127.0.0.1'
     port = 8080
     con = sqlite3.connect("login_data.db", check_same_thread=False)
-
     con.execute("PRAGMA journal_mode=WAL")
-
     c = con.cursor()
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
@@ -22,7 +20,7 @@ def Main():
     thread.start()
 
 
-def join_clients(sock, a, users, con, c):
+def join_clients(sock, a, users, con, c):  # func for catching connections
     print("the _join_clients_ function has now started working")
     while True:
         conn, addr = sock.accept()
@@ -31,7 +29,7 @@ def join_clients(sock, a, users, con, c):
         thread_1.start()
 
 
-def registration(data, conn, con, c):
+def registration(data, conn, con, c):  # func for registrating user
     print("the _registration_ function has now started working")
     check = c.execute("""SELECT * From login_data Where login = ?""", (data[2],))
     check = c.fetchone()
@@ -48,7 +46,7 @@ def registration(data, conn, con, c):
         conn.send("Такой пользователь уже существует".encode('utf-8'))
 
 
-def login(data, conn, con, c):
+def login(data, conn, con, c):  # func for searching user in database and sending response to the client
     print("the _login_ function has now started working")
     dat = c.execute("SELECT password FROM login_data WHERE login = ?", (data[2],))
     dat = c.fetchone()
@@ -62,7 +60,7 @@ def login(data, conn, con, c):
         conn.send("Такого пользователя не существует".encode('utf-8'))
 
 
-def receive(conn, a, addr, users, con, c):
+def receive(conn, a, addr, users, con, c):  # func for catching data from client
     print("the _receive_ function has now started working")
     while True:
         try:

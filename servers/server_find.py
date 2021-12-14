@@ -8,7 +8,7 @@ from colorama import init, Fore
 init(autoreset=True)
 
 
-def Main():
+def Main():  # main func
     users = {}
     host = '127.0.0.1'
     port = 8888
@@ -26,7 +26,7 @@ def Main():
     thread.start()
 
 
-def join_clients(sock, users, c):
+def join_clients(sock, users, c):  # func for catching connections
     print("the _join_clients_ function has now started working")
     while True:
         conn, addr = sock.accept()
@@ -35,7 +35,7 @@ def join_clients(sock, users, c):
         thread_1.start()
 
 
-def find(conn, c, data):
+def find(conn, c, data):  # func for finding friends in database
     print("the _find_ function has now started working")
     c.execute("SELECT login, link FROM login_data Where login Like ? ", ('%' + data + '%',))
     f = c.fetchall()
@@ -51,7 +51,7 @@ def find(conn, c, data):
     conn.send(lis)
 
 
-def receive(conn, addr, users, c):
+def receive(conn, addr, users, c):  # func for catching data from client
     print("the _receive_ function has now started working")
     while True:
         try:

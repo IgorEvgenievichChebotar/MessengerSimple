@@ -73,5 +73,5 @@ def main():  # main function
     app.exec_()
 
 
-if __name__ == '__main__':  # starts main() if the file in which it is located is active
+if __name__ == '__main__':  # that protects users from accidentally invoking the script
     main()

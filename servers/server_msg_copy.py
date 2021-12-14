@@ -5,7 +5,7 @@ import pickle
 import time
 
 
-def Main():
+def Main():  # main func
     host = '127.0.0.1'
     port = 60005
     con = sqlite3.connect("login_data.db", check_same_thread=False)
@@ -22,7 +22,7 @@ def Main():
     thread.start()
 
 
-def join_clients(sock, con, connection):
+def join_clients(sock, con, connection):  # func for catching connections
     print("the _join_clients_ function has now started working")
     while True:
         conn, addr = sock.accept()
@@ -31,7 +31,7 @@ def join_clients(sock, con, connection):
         thread_1.start()
 
 
-def save_dialog(con, data, conn, nam, m, f, connection, addr):
+def save_dialog(con, data, conn, nam, m, f, connection, addr):  # func for saving dialog
     print("the _save_dialog_ function has now started working")
     c = con.cursor()
     c.execute("""SELECT name FROM base_connection WHERE address = ?""", ((str(addr[0]) + '_' + str(addr[1])),))
@@ -85,7 +85,8 @@ def save_dialog(con, data, conn, nam, m, f, connection, addr):
             th.start()
 
 
-def checking_user(nam, con, data, conn, name, message, m, connection, addr, table):  # checks if the user exists when he is offline
+# func for checking user existence when he is offline
+def checking_user(nam, con, data, conn, name, message, m, connection, addr, table):
     print("the _checking_user_ function has now started working")
     st = True
     while st:
@@ -104,9 +105,11 @@ def checking_user(nam, con, data, conn, name, message, m, connection, addr, tabl
             c.execute("""INSERT INTO {0} Values (?,?,?,?)""".format('{0}'.format('"' + table + '"')),
                       (str(name), str(nam), str(msg), "1"), )
 
-            c.execute("""SELECT * FROM base_connection WHERE address = ?""", ((str(addr[0]) + '_' + str(addr[1])),))
+            c.execute("""SELECT * FROM base_connection WHERE address = ?""",
+                      ((str(addr[0]) + '_' + str(addr[1])),))
             sender = c.fetchall()[0][0]
-            c.execute("SELECT link FROM login_data Where login = ? ", (sender,))
+            c.execute("SELECT link FROM login_data Where login = ? ",
+                      (sender,))
             image = c.fetchone()[0]
             image = open(image, "rb")
             messages = {"sender:": sender,
@@ -126,12 +129,10 @@ def checking_user(nam, con, data, conn, name, message, m, connection, addr, tabl
             break
 
 
-def receive(conn, sock, addr, con, connection):
+def receive(conn, sock, addr, con, connection):  # func for catching data from client and working with database
     print("the _receive_ function has now started working")
     try:
-
         while True:
-
             data = conn.recv(40960000).decode('utf-8').split()
             if 'name:' in data:
                 c = con.cursor()
@@ -141,14 +142,10 @@ def receive(conn, sock, addr, con, connection):
                 ip_port = ('{0}_{1}'.format(str(addr[0]), str(addr[1])))
                 connection[ip_port] = conn
                 c.close()
-
             elif not data:
-
                 print("no data")
                 break
-
             else:
-
                 if len(data) > 3:
                     c = con.cursor()
                     m = data.index('message:')
@@ -157,7 +154,6 @@ def receive(conn, sock, addr, con, connection):
                     f = c.fetchall()
                     c.close()
                     threading.Thread(target=save_dialog, args=(con, data, conn, nam, m, f, connection, addr)).start()
-
     except socket.error:
         c = con.cursor()
         print("socket_error")

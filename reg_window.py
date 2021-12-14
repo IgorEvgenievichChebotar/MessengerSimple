@@ -54,7 +54,8 @@ class Ui_signUp(object):  # ui class
         self.signUp_label_creatAcc.setText(_translate("signUp", "Create account"))
         self.signUp_btn_reg.setText(_translate("signUp", "SignUp"))
 
-class Dialog(QDialog):  # this class works with ui
+
+class Dialog(QDialog):  # class for work with ui
     def __init__(self, s, parent=None):  # constructor
         super(Dialog, self).__init__(parent)
         self.ui = Ui_signUp()
@@ -63,11 +64,13 @@ class Dialog(QDialog):  # this class works with ui
         self.message = b'no'
         self.s = s
         self.ui.signUp_btn_reg.clicked.connect(self.insert_data)
-    def show_message_box(self,arg):  # shows a message when incorrect input
+
+    def show_message_box(self,arg):  # method for showing messageBox when catched incorrect input
         _translate = QCoreApplication.translate
         self.ui.message_box_label.setText(_translate("MainWindow", arg))
         self.ui.message_box_label.setStyleSheet('color: red')
-    def insert_data(self):  # works with user's input
+
+    def insert_data(self):  # method for work with user's input
         username = self.ui.signUp_login_lineEdit.text()
         password = self.ui.signUp_password_lineEdit.text()
         if (not username) or (not password):
@@ -80,6 +83,7 @@ class Dialog(QDialog):  # this class works with ui
         else:
             self.ui.message_box_label.setGeometry(QRect(10, 70, 381, 20))
             self.show_message_box('This user already exists')
+
 
 if __name__ == "__main__":  # that protects users from accidentally invoking the script
     import sys  # importing lib

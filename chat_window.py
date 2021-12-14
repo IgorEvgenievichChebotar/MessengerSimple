@@ -2,8 +2,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 
 
-class Ui_chatWindow(object):
-    def setupUi(self, chatWindow):
+class Ui_chatWindow(object):  # ui class
+    def setupUi(self, chatWindow):  # ui class method
         chatWindow.setObjectName("chatWindow")
         chatWindow.resize(630, 570)
         chatWindow.setMinimumSize(QtCore.QSize(630, 570))
@@ -186,7 +186,7 @@ class Ui_chatWindow(object):
         self.retranslateUi(chatWindow)
         QtCore.QMetaObject.connectSlotsByName(chatWindow)
 
-    def retranslateUi(self, chatWindow):
+    def retranslateUi(self, chatWindow):  # ui class method
         _translate = QtCore.QCoreApplication.translate
         chatWindow.setWindowTitle(_translate("chatWindow", "chatWindow"))
         self.send_msg_btn.setText(_translate("chatWindow", "Send message"))
@@ -194,7 +194,7 @@ class Ui_chatWindow(object):
         self.my_activity.setText(_translate("chatWindow", "online"))
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # that protects users from accidentally invoking the script
     import sys
     app = QtWidgets.QApplication(sys.argv)
     chatWindow = QtWidgets.QMainWindow()
