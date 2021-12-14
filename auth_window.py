@@ -1,17 +1,17 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QIcon
+from PyQt5 import QtCore, QtGui, QtWidgets  # importing lib
+from PyQt5.QtGui import QIcon  # importing lib
 
 
-class Ui_authWindow(object):
-    def setupUi(self, authWindow):
+class Ui_authWindow(object):  # ui class
+    def setupUi(self, authWindow):  # ui class method
         authWindow.setObjectName("authWindow")
         authWindow.setFixedSize(400, 300)
         authWindow.setWindowIcon(QIcon('chat.ico'))
         self.centralwidget = QtWidgets.QWidget(authWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.auth_label = QtWidgets.QLabel(self.centralwidget)
-        self.auth_label.setGeometry(QtCore.QRect(136, 20, 161, 35))
-        self.auth_label.setFont(QtGui.QFont("Segoe UI Variable",14))
+        self.auth_label.setGeometry(QtCore.QRect(120, 20, 161, 35))
+        self.auth_label.setFont(QtGui.QFont("Segoe UI Variable", 14))
         self.auth_label.setObjectName("auth_label")
         self.login_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.login_lineEdit.setGeometry(QtCore.QRect(110, 90, 181, 35))
@@ -50,7 +50,7 @@ class Ui_authWindow(object):
         self.retranslateUi(authWindow)
         QtCore.QMetaObject.connectSlotsByName(authWindow)
 
-    def retranslateUi(self, authWindow):
+    def retranslateUi(self, authWindow):  # ui class method
         _translate = QtCore.QCoreApplication.translate
         authWindow.setWindowTitle(_translate("authWindow", "authWindow"))
         self.auth_label.setText(_translate("authWindow", "Authentification"))
@@ -59,7 +59,7 @@ class Ui_authWindow(object):
         self.singIn_btn.setText(_translate("authWindow", "Sign In"))
         self.signUp_btn.setText(_translate("authWindow", "Sign Up"))
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # that protects users from accidentally invoking the script
     import sys
     app = QtWidgets.QApplication(sys.argv)
     authWindow = QtWidgets.QMainWindow()

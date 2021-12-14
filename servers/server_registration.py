@@ -80,5 +80,5 @@ def receive(conn, a, addr, users, con, c):
             break
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # that protects users from accidentally invoking the script
     Main()

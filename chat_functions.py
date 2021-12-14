@@ -1,37 +1,37 @@
-import pathlib
-import pickle
-import socket
-import sqlite3
-import threading
-import pathlib
+import pickle  # importing lib
+import socket  # importing lib
+import sqlite3  # importing lib
+import threading  # importing lib
+import pathlib  # importing lib
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.Qt import *
-from PyQt5.QtWidgets import *
-from colorama import init, Fore
+from PyQt5 import QtCore, QtGui, QtWidgets  # importing lib
+from PyQt5.Qt import *  # importing lib
+from PyQt5.QtWidgets import *  # importing lib
+from colorama import init, Fore  # importing lib
 
-init(autoreset=True)
+init(autoreset=True)  # set colorama lib condition
 
-from chat_window import Ui_chatWindow
+from chat_window import Ui_chatWindow  # importing ui class
 
 
-class messenger_(QMainWindow):
-    def __init__(self, username, parent=None):
-        super(messenger_, self).__init__(parent)
+class messenger_(QMainWindow):  # main class
+    def __init__(self, username, parent=None):  # constructor
+        super(messenger_, self).__init__(parent)  # connecting parent class
 
-        self.ui = Ui_chatWindow()
-        self.ui.setupUi(self)
-        self.con = sqlite3.connect("messages.db", check_same_thread=False)
+        self.ui = Ui_chatWindow()  # connecting class
+        self.ui.setupUi(self)  # ui initialization
+        self.con = sqlite3.connect("messages.db", check_same_thread=False, timeout=1)
         self.con2 = sqlite3.connect(pathlib.Path.cwd().joinpath('servers').joinpath('login_data.db'),
                                     check_same_thread=False, timeout=1)
+        self.con.execute("PRAGMA journal_mode=WAL")
         self.con2.execute("PRAGMA journal_mode=WAL")
         self.c = self.con.cursor()
         self.c2 = self.con2.cursor()
         self.username = username
-        self.host = '127.0.0.1'
-        self.port = 60005
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.connect((self.host, self.port))
+        self.host = '127.0.0.1'  # creating host
+        self.port = 60005  # creating port
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # creating a TCP/IP socket
+        self.s.connect((self.host, self.port))  # connecting socket to the server
         self.s.send(("name: " + self.username).encode('utf-8'))
         self.ui.my_image.setMaximumSize(100, 100)
         self.ui.my_login_label.setText(self.username)
@@ -179,10 +179,10 @@ class messenger_(QMainWindow):
 
         self.ui.friends_list.itemClicked.connect(self.show_messages)
 
-        self.line.returnPressed.connect(self.nado)
+        self.line.returnPressed.connect(self.combobox_process)
 
-    def nado(self):
-        print("the _nado_ function has now started working")
+    def combobox_process(self):
+        print("the _combobox_process_ function has now started working")
         self.sock.send((self.line.text()).encode('utf-8'))
         self.ui.friends_comboBox.hidePopup()
         self.ui.friends_comboBox.clear()
@@ -328,12 +328,9 @@ class messenger_(QMainWindow):
     def delete_friend(self):
         print("the _delete_friend_ function has now started working")
         friend_name = self.ui.friend_login_label.text()
-        print(friend_name)
-        try:
-            self.c2.execute("DELETE FROM friends Where his_friend = ? ", (friend_name,))
-            self.con2.commit()
-        except:
-            print("database error in func _delete_friend()_")
+        print("delete ", friend_name)
+        self.c2.execute("DELETE FROM friends Where his_friend = ? ", (friend_name,))
+        self.con2.commit()
         self.refresh_friends()
 
     def contextMenuEvent(self, event):
