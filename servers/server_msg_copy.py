@@ -8,7 +8,7 @@ import time
 def Main():  # main func
     host = '127.0.0.1'
     port = 60005
-    con = sqlite3.connect("login_data.db", check_same_thread=False)
+    con = sqlite3.connect("data.db", check_same_thread=False)
 
     con.execute("PRAGMA journal_mode=WAL")
 

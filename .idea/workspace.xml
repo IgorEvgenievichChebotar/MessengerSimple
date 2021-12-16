@@ -4,9 +4,16 @@
     <list default="true" id="95a0118f-8e2a-4dad-a982-24e4886fe309" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages.db-shm" beforeDir="false" afterPath="$PROJECT_DIR$/messages.db-shm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages.db-wal" beforeDir="false" afterPath="$PROJECT_DIR$/messages.db-wal" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servers/login_data.db-wal" beforeDir="false" afterPath="$PROJECT_DIR$/servers/login_data.db-wal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/login_data.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/login_data.db-journal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/login_data.db-shm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/login_data.db-wal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/server_find.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/server_find.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/server_msg_copy.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/server_msg_copy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/server_registration.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/server_registration.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +29,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -143,8 +151,8 @@
       <list>
         <item itemvalue="Python.main" />
         <item itemvalue="Python.server_find" />
-        <item itemvalue="Python.server_registration" />
         <item itemvalue="Python.server_msg_copy" />
+        <item itemvalue="Python.server_registration" />
       </list>
     </recent_temporary>
   </component>
@@ -170,5 +178,8 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>

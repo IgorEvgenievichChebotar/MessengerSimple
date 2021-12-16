@@ -12,7 +12,7 @@ def Main():  # main func
     users = {}
     host = '127.0.0.1'
     port = 8888
-    con = sqlite3.connect("login_data.db", check_same_thread=False)
+    con = sqlite3.connect("data.db", check_same_thread=False)
 
     con.execute("PRAGMA journal_mode=WAL")
 

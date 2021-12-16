@@ -1,14 +1,14 @@
-import pathlib
 import socket
 import sqlite3
 import threading
+import os
 
 
 def Main():  # main func
     users = {}
     host = '127.0.0.1'
     port = 8080
-    con = sqlite3.connect("login_data.db", check_same_thread=False)
+    con = sqlite3.connect("data.db", check_same_thread=False)
     con.execute("PRAGMA journal_mode=WAL")
     c = con.cursor()
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -29,15 +29,13 @@ def join_clients(sock, a, users, con, c):  # func for catching connections
         thread_1.start()
 
 
-def registration(data, conn, con, c):  # func for registrating user
+def registration(data, conn, con, c):  # func for registration user
     print("the _registration_ function has now started working")
     check = c.execute("""SELECT * From login_data Where login = ?""", (data[2],))
     check = c.fetchone()
     if check is None:
-        path_file_dir = pathlib.Path.cwd().parent.joinpath('path_avatarka.log')
-        path_file = open(path_file_dir, 'r')
-        image_dir = path_file.read()
-        print(image_dir)
+        parent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+        image_dir = os.path.join(parent_dir, 'avatar.png').replace(os.sep, "/")
         c.execute("INSERT INTO login_data VALUES (?,?,?)", (data[2], data[4], image_dir))
         conn.send(("Зарегистрирован").encode('utf-8'))
         print("Зарегистрирован")

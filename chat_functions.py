@@ -21,7 +21,7 @@ class messenger_(QMainWindow):  # main class
         self.ui = Ui_chatWindow()  # connecting class
         self.ui.setupUi(self)  # ui initialization
         self.con = sqlite3.connect("messages.db", check_same_thread=False, timeout=1)  # connecting db1
-        self.con2 = sqlite3.connect(pathlib.Path.cwd().joinpath('servers').joinpath('login_data.db'),
+        self.con2 = sqlite3.connect(pathlib.Path.cwd().joinpath('servers').joinpath('data.db'),
                                     check_same_thread=False, timeout=1)  # connecting db2
         self.con.execute("PRAGMA journal_mode=WAL")  # condition for db1
         self.con2.execute("PRAGMA journal_mode=WAL")  # condition for db2
@@ -38,7 +38,7 @@ class messenger_(QMainWindow):  # main class
         self.thread = threading.Thread(target=self.find)  # creating thread
         self.thread.start()  # starting thread
         self.handler()
-        self.thread_1 = threading.Thread(target=self.receive)  # creating thread
+        self.thread_1 = threading.Thread(target=self.receive_messages)  # creating thread
         self.thread_1.start()  # starting thread
         self.ui.msg_lineEdit.returnPressed.connect(self.send_message)
         self.ui.my_image.clicked.connect(self.change_image)
@@ -50,19 +50,23 @@ class messenger_(QMainWindow):  # main class
         self.ui.my_image.setIcon(icon)
         self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
 
-        self.update_friends()
+        self.update_friends_list()
 
-    def change_image(self):  # method for change avatar
+    def set_image(self, user_name):
+        print("the _set_image_ function has now started working")
+        
+
+    def change_image(self):  # method for changing avatar
         print("the _change_image_ function has now started working")
-        fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
-        print(fname)
-        if fname:
+        image_dir = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
+        print(image_dir)
+        if image_dir:
             icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(fname), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            icon.addPixmap(QtGui.QPixmap(image_dir), QtGui.QIcon.Normal, QtGui.QIcon.Off)
             self.ui.my_image.setIcon(icon)
             self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
             f = open("path_avatarka.log", 'w')
-            f.write(fname)
+            f.write(image_dir)
             f.close()
         else:
             f = open("path_avatarka.log", 'r')
@@ -73,14 +77,75 @@ class messenger_(QMainWindow):  # main class
 
     def handler(self):  # method for handle click
         print("the _handler_ function has now started working")
-        self.ui.send_msg_btn.clicked.connect(self.send_message)
+        self.ui.send_msg_btn.clicked.connect(self.send_message)       
 
-    def receive(self):  # method for waiting response from the server
-        print("the _receive_ function has now started working")
+    def send_message(self):  # method for save message to database
+        print("the _send_message_ function has now started working")
+        self.msg = self.ui.msg_lineEdit.text().split()
+        if self.msg:
+            print(self.msg)
+            self.message = self.msg[0:]
+            self.message = ' '.join(self.message)
+            add_msg = QtWidgets.QListWidgetItem()
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(self.username + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            add_msg.setIcon(icon)
+            add_msg.setText(self.message)
+            self.ui.msg_list.addItem(add_msg)
+            # self.item = self.ui.friends_list.currentItem()
+            if self.item:
+                self.c.execute("""INSERT INTO""" + '"' + self.item + '"' + """VALUES (?,?)""",
+                               (self.username, self.message,))
+                self.con.commit()
+                self.s.send(
+                    ("sender: " + self.username + " receiver: " + self.item + " message: " + self.message).encode(
+                        'utf-8'))
+                self.ui.msg_lineEdit.clear()
+            else:
+                print("no receiver")
+        else:
+            print("empty field")
+
+    def find(self):  # method for send data to server
+        print("the _find_ function has now started working")
+        host = '127.0.0.1'
+        port = 8888
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect((host, port))
+        self.sock.send(("name: " + self.username).encode('utf-8'))
+        self.new_thread = threading.Thread(target=self.receive_friend)
+        self.new_thread.start()
+        self.line = self.ui.friends_comboBox.lineEdit()
+
+        self.ui.friends_list.itemClicked.connect(self.update_messages_list)
+
+        self.line.returnPressed.connect(self.combobox_process)
+
+    def combobox_process(self):  # method for processing friends_comboBox button
+        print("the _combobox_process_ function has now started working")
+        self.sock.send((self.line.text()).encode('utf-8'))
+        self.ui.friends_comboBox.hidePopup()
+        self.ui.friends_comboBox.clear()
+        # self.ui.friends_list.takeItem(self.ui.friends_list.selectedItems()[0])
+        self.ui.friends_comboBox.activated.connect(self.pressed_keys)
+        self.ui.find_friends_btn.clicked.connect(self.pressed_keys)
+
+    def get_key(self, d):  # method for catching click
+        print("the _get_key_ function has now started working")
+        for item in d.items():
+            f = open(item[0] + ".png", 'wb')
+            f.write(item[1])
+            f.close()
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(item[0] + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            self.ui.friends_comboBox.addItem(icon, item[0])
+            
+    def receive_messages(self):  # method for waiting response from the server
+        print("the _receive_messages_ function has now started working")
         while True:
             self.data = self.s.recv(40960000)
             data = pickle.loads(self.data)
-            print(data)
+            print("receive_messages_data = ", data)
             sender = data["sender:"]
             message_ = data['message:']
             image_data = data["image:"]
@@ -135,77 +200,17 @@ class messenger_(QMainWindow):  # main class
                 itemm = self.ui.friends_list.item(0)
                 itemm.setBackground(brush)
                 print(itemm.text())
-            # self.guest_message = str('Received from ' + sender +': '+ message_)
+            # self.guest_message = str('received from ' + sender +': '+ message_)
             # self.ui.plainTextEdit.appendPlainText(self.guest_message)
 
-    def send_message(self):  # method for save message to database
-        print("the _send_message_ function has now started working")
-        self.msg = self.ui.msg_lineEdit.text().split()
-        if self.msg:
-            print(self.msg)
-            self.message = self.msg[0:]
-            self.message = ' '.join(self.message)
-            add_msg = QtWidgets.QListWidgetItem()
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(self.username + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            add_msg.setIcon(icon)
-            add_msg.setText(self.message)
-            self.ui.msg_list.addItem(add_msg)
-            # self.item = self.ui.friends_list.currentItem()
-            if self.item:
-                self.c.execute("""INSERT INTO""" + '"' + self.item + '"' + """VALUES (?,?)""",
-                               (self.username, self.message,))
-                self.con.commit()
-                self.s.send(
-                    ("sender: " + self.username + " receiver: " + self.item + " message: " + self.message).encode(
-                        'utf-8'))
-                self.ui.msg_lineEdit.clear()
-            else:
-                print("no receiver")
-        else:
-            print("empty field")
-
-    def find(self):  # method for send data to server
-        print("the _find_ function has now started working")
-        host = '127.0.0.1'
-        port = 8888
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((host, port))
-        self.sock.send(("name: " + self.username).encode('utf-8'))
-        self.new_thread = threading.Thread(target=self.receiv)
-        self.new_thread.start()
-        self.line = self.ui.friends_comboBox.lineEdit()
-
-        self.ui.friends_list.itemClicked.connect(self.update_messages)
-
-        self.line.returnPressed.connect(self.combobox_process)
-
-    def combobox_process(self):  # method for processing friends_comboBox button
-        print("the _combobox_process_ function has now started working")
-        self.sock.send((self.line.text()).encode('utf-8'))
-        self.ui.friends_comboBox.hidePopup()
-        self.ui.friends_comboBox.clear()
-        # self.ui.friends_list.takeItem(self.ui.friends_list.selectedItems()[0])
-        self.ui.friends_comboBox.activated.connect(self.pressed_keys)
-        self.ui.find_friends_btn.clicked.connect(self.pressed_keys)
-
-    def get_key(self, d):  # method for catching click
-        print("the _get_key_ function has now started working")
-        for item in d.items():
-            f = open(item[0] + ".png", 'wb')
-            f.write(item[1])
-            f.close()
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(item[0] + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.ui.friends_comboBox.addItem(icon, item[0])
-
-    def receiv(self):  # method for waiting response from the server
-        print("the _receiv_ function has now started working")
+    def receive_friend(self):  # method for waiting response from the server
+        print("the _receive_friend_ function has now started working")
         while True:
-            self.dataa = self.sock.recv(40960000)  # .decode('utf-8').split(",")
-            self.dataa = pickle.loads(self.dataa)
-            if self.dataa:
-                self.get_key((self.dataa))
+            self.data2 = self.sock.recv(40960000)  # .decode('utf-8').split(",")
+            data = pickle.loads(self.data2)
+            if data:
+                print("receive_friend_data = ", data)
+                self.get_key((data))
 
     def pressed_keys(self):  # method for processing click
         print("the _pressed_keys_ function has now started working")
@@ -217,8 +222,8 @@ class messenger_(QMainWindow):  # main class
         self.ui.friends_comboBox.activated.disconnect(self.pressed_keys)
         self.ui.find_friends_btn.clicked.disconnect(self.pressed_keys)
 
-    def update_messages(self):  # method for show list of messages
-        print("the _update_messages_ function has now started working")
+    def update_messages_list(self):  # method for show list of messages
+        print("the _update_messages_list_ function has now started working")
         self.ui.msg_list.clear()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -238,12 +243,13 @@ class messenger_(QMainWindow):  # main class
                 add_msg.setIcon(icon)
                 add_msg.setText(mess)
                 self.ui.msg_list.addItem(add_msg)
-        self.update_profile()
+        self.update_profile_info()
 
-    def update_profile(self):  # method for show profile information
-        print("the _update_profile_ function has now started working")
+    def update_profile_info(self):  # method for show profile information
+        print("the _update_profile_info_ function has now started working")
 
         # avatar
+        self.ui.friend_image.setEnabled(True)
         path_file = open("path_avatarka.log", 'r')
         image_dir = path_file.read()
         icon = QtGui.QIcon()
@@ -265,19 +271,24 @@ class messenger_(QMainWindow):  # main class
             self.ui.friend_activity.setText("offline")
             self.ui.friend_activity.setStyleSheet('color: red')
 
-    def clear_profile(self):
-        print("the _clear_profile_ function has now started working")
+    def clear_profile_info(self):
+        print("the _clear_profile_info_ function has now started working")
         self.ui.friend_login_label.setText("")
         self.ui.friend_activity.setText("")
         self.ui.friend_image.setIcon(QIcon())
+        self.ui.friend_image.setEnabled(False)
 
-    def clear_messages(self):
-        print("the _clear_messages_ function has now started working")
+    def clear_messages_list(self):
+        print("the _clear_messages_list_ function has now started working")
         self.ui.msg_list.clear()
-
-    def update_friends(self):  # method for showing friends list
-        print("the _update_friends_ function has now started working")
+        
+    def clear_friends_list(self):
+        print("the _clear_friends_list_ function has now started working")
         self.ui.friends_list.clear()
+
+    def update_friends_list(self):  # method for showing friends list
+        print("the _update_friends_list_ function has now started working")
+        self.clear_friends_list()
         self.c2.execute("""CREATE TABLE IF NOT EXISTS friends(
                       user TEXT,
                       his_friend TEXT);
@@ -302,9 +313,9 @@ class messenger_(QMainWindow):  # main class
         self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
         entry = self.c2.fetchone()
         if entry is None:
-            print(Fore.BLUE + "the string in friends WAS CREATED")
             self.c2.execute("INSERT INTO friends VALUES(?, ?);", (self.username, friend_name))
             self.con2.commit()
+            print(Fore.BLUE + "the string in friends WAS CREATED")
         else:
             self.c2.execute("SELECT user, his_friend FROM friends")
             lines = self.c2.fetchall()
@@ -331,9 +342,9 @@ class messenger_(QMainWindow):  # main class
         self.c2.execute("DELETE FROM friends Where his_friend = ? ", (friend_name,))
         self.con2.commit()
 
-        self.update_friends()
-        self.clear_profile()
-        self.clear_messages()
+        self.update_friends_list()
+        self.clear_profile_info()
+        self.clear_messages_list()
 
     def contextMenuEvent(self, event):  # method is called when mouse right click was caught
         print("the _contextMenuEvent_ function has now started working")
@@ -344,7 +355,7 @@ class messenger_(QMainWindow):  # main class
             try:
                 friend_name = self.ui.friends_list.currentItem().text()
                 self.delete_friend(friend_name)
-                self.clear_profile()
+                self.clear_profile_info()
             except:
                 print("friend not selected")
 
