@@ -2,6 +2,7 @@ import socket
 import sqlite3
 import threading
 import os
+import pickle
 
 
 def Main():  # main func

@@ -3,6 +3,7 @@ import socket  # importing lib
 import sqlite3  # importing lib
 import threading  # importing lib
 import pathlib  # importing lib
+import time
 
 from PyQt5 import QtCore, QtGui, QtWidgets  # importing lib
 from PyQt5.Qt import *  # importing lib
@@ -50,11 +51,17 @@ class messenger_(QMainWindow):  # main class
         self.ui.my_image.setIcon(icon)
         self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
 
+        # set_image(self.username)
+
         self.update_friends_list()
 
     def set_image(self, user_name):
         print("the _set_image_ function has now started working")
-        
+
+        """image = image_dir.read()
+        byte_image = pickle.dumps(image)
+        f = open(item[0] + ".png", 'wb')  # creating file in project dir
+        f.write(byte_image)  # image in bytes writing to this file"""
 
     def change_image(self):  # method for changing avatar
         print("the _change_image_ function has now started working")
@@ -133,8 +140,11 @@ class messenger_(QMainWindow):  # main class
     def get_key(self, d):  # method for catching click
         print("the _get_key_ function has now started working")
         for item in d.items():
-            f = open(item[0] + ".png", 'wb')
-            f.write(item[1])
+            print(item)
+            # item[0] - friend name
+            # item[1] - byte friend image
+            f = open(item[0] + ".png", 'wb')  # creating file in project dir
+            f.write(item[1])  # image in bytes writing to this file
             f.close()
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(item[0] + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -210,7 +220,7 @@ class messenger_(QMainWindow):  # main class
             data = pickle.loads(self.data2)
             if data:
                 print("receive_friend_data = ", data)
-                self.get_key((data))
+                self.get_key(data)
 
     def pressed_keys(self):  # method for processing click
         print("the _pressed_keys_ function has now started working")

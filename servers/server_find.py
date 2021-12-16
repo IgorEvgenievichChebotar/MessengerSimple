@@ -2,6 +2,7 @@ import pickle
 import socket
 import sqlite3
 import threading
+import time
 
 from colorama import init, Fore
 
@@ -39,7 +40,7 @@ def find(conn, c, data):  # func for finding friends in database
     print("the _find_ function has now started working")
     c.execute("SELECT login, link FROM login_data Where login Like ? ", ('%' + data + '%',))
     f = c.fetchall()
-    lis = ""
+    byte_image = ""
     py = {}
     if f is not None:
         for x in range(0, len(f)):
@@ -47,8 +48,8 @@ def find(conn, c, data):  # func for finding friends in database
             b = a[0]
             image = open(a[1], "rb")
             py[b] = image.read()
-        lis = pickle.dumps(py)
-    conn.send(lis)
+        byte_image = pickle.dumps(py)
+    conn.send(byte_image)
 
 
 def receive(conn, addr, users, c):  # func for catching data from client
