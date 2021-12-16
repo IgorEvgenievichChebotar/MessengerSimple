@@ -50,7 +50,7 @@ class messenger_(QMainWindow):  # main class
         self.ui.my_image.setIcon(icon)
         self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
 
-        self.refresh_friends()
+        self.show_friends()
 
     def change_image(self):  # method for change avatar
         print("the _change_image_ function has now started working")
@@ -95,10 +95,10 @@ class messenger_(QMainWindow):  # main class
                     cur_item = (self.ui.friends_list.item(x))
                     print(str(cur_item.text()), str(sender))
                     if cur_item.text() == sender:
-                        brush = QtGui.QBrush(QtGui.QColor(166, 226, 43))
+                        brush = QtGui.QBrush(QtGui.QColor(32, 178, 170))
                         brush.setStyle(QtCore.Qt.SolidPattern)
                         cur_item.setBackground(brush)
-                        print(cur_item.text())
+                        print(sender, cur_item.text())
                         break
                 else:
                     print("No")
@@ -221,7 +221,7 @@ class messenger_(QMainWindow):  # main class
     def show_messages(self):  # method for show list of messages
         print("the _show_messages_ function has now started working")
         self.ui.msg_list.clear()
-        brush = QtGui.QBrush(QtGui.QColor(255, 225, 255))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
         itemm = self.ui.friends_list.currentItem()
         itemm.setBackground(brush)
@@ -239,10 +239,10 @@ class messenger_(QMainWindow):  # main class
                 add_msg.setIcon(icon)
                 add_msg.setText(mess)
                 self.ui.msg_list.addItem(add_msg)
-        self.set_profile(self.item)
+        self.show_profile()
 
-    def set_profile(self, friend_name):  # method for filling profile information
-        print("the _set_profile_ function has now started working")
+    def show_profile(self):  # method for show profile information
+        print("the _show_profile_ function has now started working")
 
         path_file = open("path_avatarka.log", 'r')
         image_dir = path_file.read()
@@ -265,8 +265,9 @@ class messenger_(QMainWindow):  # main class
             self.ui.friend_activity.setText("offline")
             self.ui.friend_activity.setStyleSheet('color: red')
 
-    def refresh_friends(self):  # method for refreshing friends list
-        print("the _refresh_friends_ function has now started working")
+    def show_friends(self):  # method for showing friends list
+        print("the _show_friends_ function has now started working")
+        self.ui.friends_list.clear()
         self.c2.execute("""CREATE TABLE IF NOT EXISTS friends(
                       user TEXT,
                       his_friend TEXT);
@@ -274,7 +275,6 @@ class messenger_(QMainWindow):  # main class
         self.con2.commit()
         self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
         entry = self.c2.fetchone()
-        self.ui.friends_list.clear()
         if entry is None:
             print(Fore.BLUE + "the string in friends is empty")
         else:
@@ -288,24 +288,21 @@ class messenger_(QMainWindow):  # main class
 
     def add_friend(self, friend_name):  # method for adding friend to database
         print("the _add_friend_ function has now started working")
-        try:
-            self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
-            entry = self.c2.fetchone()
-            if entry is None:
+        self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
+        entry = self.c2.fetchone()
+        if entry is None:
+            print(Fore.BLUE + "the string in friends WAS CREATED")
+            self.c2.execute("INSERT INTO friends VALUES(?, ?);", (self.username, friend_name))
+            self.con2.commit()
+        else:
+            self.c2.execute("SELECT user, his_friend FROM friends")
+            lines = self.c2.fetchall()
+            if (self.username, friend_name) in lines:
+                print(Fore.GREEN + "the string in friends were founded")
+            else:
                 print(Fore.BLUE + "the string in friends WAS CREATED")
                 self.c2.execute("INSERT INTO friends VALUES(?, ?);", (self.username, friend_name))
                 self.con2.commit()
-            else:
-                self.c2.execute("SELECT user, his_friend FROM friends")
-                lines = self.c2.fetchall()
-                if (self.username, friend_name) in lines:
-                    print(Fore.GREEN + "the string in friends were founded")
-                else:
-                    print(Fore.BLUE + "the string in friends WAS CREATED")
-                    self.c2.execute("INSERT INTO friends VALUES(?, ?);", (self.username, friend_name))
-                    self.con2.commit()
-        except:
-            print("database error in func _add_friend()_")
 
     def add_friend_item(self, friend_name):  # method for adding friend item
         print("the _add_friend_item_ function has now started working")
@@ -317,21 +314,24 @@ class messenger_(QMainWindow):  # main class
         item.setText(friend_name)
         self.ui.friends_list.addItem(item)
 
-    def delete_friend(self):  # method for deleting friend from database
+    def delete_friend(self, friend_name):  # method for deleting friend from database
         print("the _delete_friend_ function has now started working")
-        friend_name = self.ui.friend_login_label.text()
         print("delete ", friend_name)
         self.c2.execute("DELETE FROM friends Where his_friend = ? ", (friend_name,))
         self.con2.commit()
-        self.refresh_friends()
+        self.show_friends()
 
-    def contextMenuEvent(self, event):  # method is called when mouse right click was catched
+    def contextMenuEvent(self, event):  # method is called when mouse right click was caught
         print("the _contextMenuEvent_ function has now started working")
         menu = QMenu(self)
         del_friend = menu.addAction("Delete friend")
         action = menu.exec_(self.mapToGlobal(event.pos()))
         if action == del_friend:
-            self.delete_friend()
+            try:
+                friend_name = self.ui.friends_list.currentItem().text()
+                self.delete_friend(friend_name)
+            except:
+                print("friend not selected")
 
     def closeEvent(self, event):  # method is called when the program closing
         print("the _closeEvent_ function has now started working")

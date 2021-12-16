@@ -22,7 +22,7 @@ class MainDialog(QMainWindow):  # main class
         self.ui.singIn_btn.clicked.connect(self.login_check)  # signIn button click processing
         self.ui.signUp_btn.clicked.connect(self.sign_up_check)  # signUp button click processing
 
-    def show_message_box(self, arg):  # notification in red text about incorrect input
+    def show_message_box(selqf, arg):  # notification in red text about incorrect input
         print("the _show_message_box_ function has now started working")
         _translate = QCoreApplication.translate
         self.ui.message_box_label.setText(_translate("MainWindow", arg))
