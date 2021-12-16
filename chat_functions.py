@@ -50,7 +50,7 @@ class messenger_(QMainWindow):  # main class
         self.ui.my_image.setIcon(icon)
         self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
 
-        self.show_friends()
+        self.update_friends()
 
     def change_image(self):  # method for change avatar
         print("the _change_image_ function has now started working")
@@ -176,7 +176,7 @@ class messenger_(QMainWindow):  # main class
         self.new_thread.start()
         self.line = self.ui.friends_comboBox.lineEdit()
 
-        self.ui.friends_list.itemClicked.connect(self.show_messages)
+        self.ui.friends_list.itemClicked.connect(self.update_messages)
 
         self.line.returnPressed.connect(self.combobox_process)
 
@@ -213,13 +213,12 @@ class messenger_(QMainWindow):  # main class
         friend_name = self.ui.friends_comboBox.currentText()
 
         self.add_friend(friend_name)
-        self.add_friend_item(friend_name)
 
         self.ui.friends_comboBox.activated.disconnect(self.pressed_keys)
         self.ui.find_friends_btn.clicked.disconnect(self.pressed_keys)
 
-    def show_messages(self):  # method for show list of messages
-        print("the _show_messages_ function has now started working")
+    def update_messages(self):  # method for show list of messages
+        print("the _update_messages_ function has now started working")
         self.ui.msg_list.clear()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -239,19 +238,20 @@ class messenger_(QMainWindow):  # main class
                 add_msg.setIcon(icon)
                 add_msg.setText(mess)
                 self.ui.msg_list.addItem(add_msg)
-        self.show_profile()
+        self.update_profile()
 
-    def show_profile(self):  # method for show profile information
-        print("the _show_profile_ function has now started working")
+    def update_profile(self):  # method for show profile information
+        print("the _update_profile_ function has now started working")
 
+        # avatar
         path_file = open("path_avatarka.log", 'r')
         image_dir = path_file.read()
-
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(image_dir), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.ui.friend_image.setIcon(icon)
         self.ui.friend_image.setIconSize(QtCore.QSize(100, 100))
 
+        # status and name
         self.c2.execute("SELECT name FROM base_connection WHERE name = ?", (self.item,))
         name = self.c2.fetchone()
         if name is not None:
@@ -265,8 +265,18 @@ class messenger_(QMainWindow):  # main class
             self.ui.friend_activity.setText("offline")
             self.ui.friend_activity.setStyleSheet('color: red')
 
-    def show_friends(self):  # method for showing friends list
-        print("the _show_friends_ function has now started working")
+    def clear_profile(self):
+        print("the _clear_profile_ function has now started working")
+        self.ui.friend_login_label.setText("")
+        self.ui.friend_activity.setText("")
+        self.ui.friend_image.setIcon(QIcon())
+
+    def clear_messages(self):
+        print("the _clear_messages_ function has now started working")
+        self.ui.msg_list.clear()
+
+    def update_friends(self):  # method for showing friends list
+        print("the _update_friends_ function has now started working")
         self.ui.friends_list.clear()
         self.c2.execute("""CREATE TABLE IF NOT EXISTS friends(
                       user TEXT,
@@ -284,10 +294,11 @@ class messenger_(QMainWindow):  # main class
             print("number of friends : ", len(lines))
             for line in lines:
                 friend_name = line[1]
-                self.add_friend_item(friend_name)
+                self.add_friend(friend_name)
 
     def add_friend(self, friend_name):  # method for adding friend to database
         print("the _add_friend_ function has now started working")
+        self.add_friend_item(friend_name)
         self.c2.execute("SELECT user FROM friends Where user = ? ", (self.username,))
         entry = self.c2.fetchone()
         if entry is None:
@@ -319,7 +330,10 @@ class messenger_(QMainWindow):  # main class
         print("delete ", friend_name)
         self.c2.execute("DELETE FROM friends Where his_friend = ? ", (friend_name,))
         self.con2.commit()
-        self.show_friends()
+
+        self.update_friends()
+        self.clear_profile()
+        self.clear_messages()
 
     def contextMenuEvent(self, event):  # method is called when mouse right click was caught
         print("the _contextMenuEvent_ function has now started working")
@@ -330,6 +344,7 @@ class messenger_(QMainWindow):  # main class
             try:
                 friend_name = self.ui.friends_list.currentItem().text()
                 self.delete_friend(friend_name)
+                self.clear_profile()
             except:
                 print("friend not selected")
 
