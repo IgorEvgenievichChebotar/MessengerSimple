@@ -40,6 +40,7 @@ def find(conn, c, data):  # func for finding friends in database
     print("the _find_ function has now started working")
     c.execute("SELECT login, link FROM login_data Where login Like ? ", ('%' + data + '%',))
     f = c.fetchall()
+    print(f)
     byte_image = ""
     py = {}
     if f is not None:
@@ -57,9 +58,7 @@ def receive(conn, addr, users, c):  # func for catching data from client
     while True:
         try:
             data = conn.recv(4096).decode('utf-8')
-
             print(Fore.GREEN + (str(addr[0]) + ' : ' + str(addr[1]) + " is online"))
-
             users[addr] = conn
             if not data:
                 print("data empty")
@@ -67,9 +66,7 @@ def receive(conn, addr, users, c):  # func for catching data from client
             else:
                 threading.Thread(target=find, args=(conn, c, data)).start()
         except:
-
             print(Fore.RED + (str(addr[0]) + ' : ' + str(addr[1]) + " is offline"))
-
             break
 
 

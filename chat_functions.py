@@ -39,7 +39,7 @@ class messenger_(QMainWindow):  # main class
         self.thread = threading.Thread(target=self.find)  # creating thread
         self.thread.start()  # starting thread
         self.handler()
-        self.thread_1 = threading.Thread(target=self.receive_messages)  # creating thread
+        self.thread_1 = threading.Thread(target=self.receive_message)  # creating thread
         self.thread_1.start()  # starting thread
         self.ui.msg_lineEdit.returnPressed.connect(self.send_message)
         self.ui.my_image.clicked.connect(self.change_image)
@@ -134,29 +134,15 @@ class messenger_(QMainWindow):  # main class
         # self.ui.friends_list.takeItem(self.ui.friends_list.selectedItems()[0])
         self.ui.friends_comboBox.activated.connect(self.pressed_keys)
         self.ui.find_friends_btn.clicked.connect(self.pressed_keys)
-
-    def get_key(self, d):  # method for catching click
-        print("the _get_key_ function has now started working")
-        for item in d.items():
-            print(item)
-            # item[0] - friend name
-            # item[1] - byte friend image
-            f = open(item[0] + ".png", 'wb')  # creating file in project dir
-            f.write(item[1])  # image in bytes writing to this file
-            f.close()
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(item[0] + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.ui.friends_comboBox.addItem(icon, item[0])
             
-    def receive_messages(self):  # method for waiting response from the server
-        print("the _receive_messages_ function has now started working")
+    def receive_message(self):  # method for waiting response from the server
+        print("the _receive_message_ function has now started working")
         while True:
-            self.data = self.s.recv(40960000)
-            data = pickle.loads(self.data)
-            print("receive_messages_data = ", data)
-            sender = data["sender:"]
-            message_ = data['message:']
-            image_data = data["image:"]
+            bytes_data = self.s.recv(40960000)
+            self.msg_data = pickle.loads(bytes_data)  # sender, message, his image in bytes
+            sender = self.msg_data["sender:"]
+            message_ = self.msg_data['message:']
+            image_data = self.msg_data["image:"]
             self.c.execute("""CREATE TABLE IF NOT EXISTS """ + '"' + sender + '"' + """(sender TEXT, message TEXT)""")
             self.c.execute("""INSERT INTO""" + '"' + sender + '"' + """VALUES (?,?)""", (sender, message_,))
             self.con.commit()
@@ -214,13 +200,24 @@ class messenger_(QMainWindow):  # main class
     def receive_friend(self):  # method for waiting response from the server
         print("the _receive_friend_ function has now started working")
         while True:
-            self.data2 = self.sock.recv(40960000)  # .decode('utf-8').split(",")
-            data = pickle.loads(self.data2)
-            if data:
-                print("receive_friend_data = ", data)
-                self.get_key(data)
+            bytes_data = self.sock.recv(40960000)  # .decode('utf-8').split(",")
+            self.friend_data = pickle.loads(bytes_data)  # friend name and his image in bytes
+            if self.friend_data:
+                self.get_key(self.friend_data)
 
-    def pressed_keys(self):  # method for processing click
+    def get_key(self, friend_data):  # method for
+        print("the _get_key_ function has now started working")
+        for item in friend_data.items():
+            # item[0] - friend name
+            # item[1] - byte friend image
+            f = open(item[0] + ".png", 'wb')  # creating file in project dir
+            f.write(item[1])  # image in bytes writing to this file
+            f.close()
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(item[0] + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            self.ui.friends_comboBox.addItem(icon, item[0])
+
+    def pressed_keys(self):  # method for process adding friends
         print("the _pressed_keys_ function has now started working")
 
         friend_name = self.ui.friends_comboBox.currentText()
