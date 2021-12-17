@@ -3,12 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="95a0118f-8e2a-4dad-a982-24e4886fe309" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/11.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/22.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/chat_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages.db-shm" beforeDir="false" afterPath="$PROJECT_DIR$/messages.db-shm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages.db-wal" beforeDir="false" afterPath="$PROJECT_DIR$/messages.db-wal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/data.db" beforeDir="false" afterPath="$PROJECT_DIR$/servers/data.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servers/data.db-shm" beforeDir="false" afterPath="$PROJECT_DIR$/servers/data.db-shm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/servers/data.db-wal" beforeDir="false" afterPath="$PROJECT_DIR$/servers/data.db-wal" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servers/server_find.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/server_find.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servers/server_registration.py" beforeDir="false" afterPath="$PROJECT_DIR$/servers/server_registration.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,9 +145,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.server_find" />
         <item itemvalue="Python.server_msg_copy" />
         <item itemvalue="Python.server_registration" />
+        <item itemvalue="Python.server_find" />
       </list>
     </recent_temporary>
   </component>

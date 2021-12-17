@@ -24,10 +24,10 @@ class messenger_(QMainWindow):  # main class
         self.con = sqlite3.connect("messages.db", check_same_thread=False, timeout=1)  # connecting db1
         self.con2 = sqlite3.connect(pathlib.Path.cwd().joinpath('servers').joinpath('data.db'),
                                     check_same_thread=False, timeout=1)  # connecting db2
-        self.con.execute("PRAGMA journal_mode=WAL")  # condition for db1
-        self.con2.execute("PRAGMA journal_mode=WAL")  # condition for db2
-        self.c = self.con.cursor()  # creating cursor for db1
-        self.c2 = self.con2.cursor()  # creating cursor for db2
+        self.con.execute("PRAGMA journal_mode=WAL")  # condition for db messages
+        self.con2.execute("PRAGMA journal_mode=WAL")  # condition for db data
+        self.c = self.con.cursor()  # creating cursor for db messages
+        self.c2 = self.con2.cursor()  # creating cursor for db data
         self.username = username  # assignment
         self.host = '127.0.0.1'  # creating host
         self.port = 60005  # creating port
@@ -44,21 +44,28 @@ class messenger_(QMainWindow):  # main class
         self.ui.msg_lineEdit.returnPressed.connect(self.send_message)
         self.ui.my_image.clicked.connect(self.change_image)
 
-        path_file = open("path_avatarka.log", 'r')
-        image_dir = path_file.read()
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(image_dir), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.ui.my_image.setIcon(icon)
-        self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
-
-        # set_image(self.username)
+        self.set_profile_image(self.username)
 
         self.update_friends_list()
 
-    def set_image(self, user_name):
-        print("the _set_image_ function has now started working")
+    def set_profile_image(self, username):
+        print("the _set_profile_image_ function has now started working")
 
-        """image = image_dir.read()
+        self.c2.execute("SELECT link FROM login_data WHERE login = ?", (username,))
+        image_link = self.c2.fetchone()
+
+        if username == self.username:
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(image_link[0]), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            self.ui.my_image.setIcon(icon)
+            self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
+        else:
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(image_link[0]), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            self.ui.friend_image.setIcon(icon)
+            self.ui.friend_image.setIconSize(QtCore.QSize(100, 100))
+
+        """image = image_link.read()
         byte_image = pickle.dumps(image)
         f = open(item[0] + ".png", 'wb')  # creating file in project dir
         f.write(byte_image)  # image in bytes writing to this file"""
@@ -68,19 +75,11 @@ class messenger_(QMainWindow):  # main class
         image_dir = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
         print(image_dir)
         if image_dir:
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(image_dir), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.ui.my_image.setIcon(icon)
-            self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
-            f = open("path_avatarka.log", 'w')
-            f.write(image_dir)
-            f.close()
-        else:
-            f = open("path_avatarka.log", 'r')
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(f.read()), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            self.ui.my_image.setIcon(icon)
-            self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
+            command = "UPDATE login_data SET link = ? WHERE login = ?"
+            data = (image_dir, self.username,)
+            self.c2.execute(command, data)
+            self.con2.commit()
+            self.set_profile_image(self.username)
 
     def handler(self):  # method for handle click
         print("the _handler_ function has now started working")
@@ -260,12 +259,8 @@ class messenger_(QMainWindow):  # main class
 
         # avatar
         self.ui.friend_image.setEnabled(True)
-        path_file = open("path_avatarka.log", 'r')
-        image_dir = path_file.read()
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(image_dir), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.ui.friend_image.setIcon(icon)
-        self.ui.friend_image.setIconSize(QtCore.QSize(100, 100))
+        
+        self.set_profile_image(self.item)
 
         # status and name
         self.c2.execute("SELECT name FROM base_connection WHERE name = ?", (self.item,))
