@@ -20,6 +20,8 @@ class MainDialog(QMainWindow):  # main class
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # creating a TCP/IP socket
         self.s.connect((self.host, self.port))  # connecting socket to the server
         self.ui.singIn_btn.clicked.connect(self.login_check)  # signIn button click processing
+        self.ui.login_lineEdit.returnPressed.connect(self.login_check)
+        self.ui.password_lineEdit.returnPressed.connect(self.login_check)
         self.ui.signUp_btn.clicked.connect(self.sign_up_check)  # signUp button click processing
 
     def show_message_box(self, arg):  # notification in red text about incorrect input

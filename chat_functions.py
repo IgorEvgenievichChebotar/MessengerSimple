@@ -44,24 +44,23 @@ class messenger_(QMainWindow):  # main class
         self.ui.msg_lineEdit.returnPressed.connect(self.send_message)
         self.ui.my_image.clicked.connect(self.change_image)
 
-        self.set_profile_image(self.username)
+        self.update_profile_image(self.username)
 
         self.update_friends_list()
 
-    def set_profile_image(self, username):
-        print("the _set_profile_image_ function has now started working")
+    def update_profile_image(self, username):
+        print("the _update_profile_image_ function has now started working")
 
         self.c2.execute("SELECT link FROM login_data WHERE login = ?", (username,))
         image_link = self.c2.fetchone()
 
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(image_link[0]), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
         if username == self.username:
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(image_link[0]), QtGui.QIcon.Normal, QtGui.QIcon.Off)
             self.ui.my_image.setIcon(icon)
             self.ui.my_image.setIconSize(QtCore.QSize(100, 100))
         else:
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(image_link[0]), QtGui.QIcon.Normal, QtGui.QIcon.Off)
             self.ui.friend_image.setIcon(icon)
             self.ui.friend_image.setIconSize(QtCore.QSize(100, 100))
 
@@ -79,7 +78,7 @@ class messenger_(QMainWindow):  # main class
             data = (image_dir, self.username,)
             self.c2.execute(command, data)
             self.con2.commit()
-            self.set_profile_image(self.username)
+            self.update_profile_image(self.username)
 
     def handler(self):  # method for handle click
         print("the _handler_ function has now started working")
@@ -260,7 +259,7 @@ class messenger_(QMainWindow):  # main class
         # avatar
         self.ui.friend_image.setEnabled(True)
         
-        self.set_profile_image(self.item)
+        self.update_profile_image(self.item)
 
         # status and name
         self.c2.execute("SELECT name FROM base_connection WHERE name = ?", (self.item,))
@@ -334,9 +333,13 @@ class messenger_(QMainWindow):  # main class
     def add_friend_item(self, friend_name):  # method for adding friend item
         print("the _add_friend_item_ function has now started working")
         self.ui.friends_list.setIconSize(QtCore.QSize(40, 40))
+
+        self.c2.execute("SELECT link FROM login_data WHERE login = ?", (friend_name,))
+        image_link = self.c2.fetchone()
+
         item = QtWidgets.QListWidgetItem()
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(friend_name + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(image_link[0]), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item.setIcon(icon)
         item.setText(friend_name)
         self.ui.friends_list.addItem(item)

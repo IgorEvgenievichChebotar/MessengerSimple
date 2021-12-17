@@ -59,6 +59,7 @@ class Ui_authWindow(object):  # ui class
         self.singIn_btn.setText(_translate("authWindow", "Sign In"))
         self.signUp_btn.setText(_translate("authWindow", "Sign Up"))
 
+
 if __name__ == "__main__":  # that protects users from accidentally invoking the script
     import sys
     app = QtWidgets.QApplication(sys.argv)

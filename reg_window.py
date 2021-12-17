@@ -65,7 +65,7 @@ class Dialog(QDialog):  # class for work with ui
         self.s = s
         self.ui.signUp_btn_reg.clicked.connect(self.insert_data)
 
-    def show_message_box(self,arg):  # method for showing messageBox when catched incorrect input
+    def show_message_box(self, arg):  # method for showing messageBox when caught incorrect input
         _translate = QCoreApplication.translate
         self.ui.message_box_label.setText(_translate("MainWindow", arg))
         self.ui.message_box_label.setStyleSheet('color: red')
