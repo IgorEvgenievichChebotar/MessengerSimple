@@ -30,62 +30,72 @@ public:
 		m_name = name;
 	}
 
-	void connect(Node* target_node) {
-		if (m_connected_to.size() >= MAX_CONNECTED_TO) {
-			cerr << "Превышено кол-во связей self node" << endl;
-		}
-		else if (target_node->m_connected_in.size() >= MAX_CONNECTED_IN) {
-			cerr << "Превышено кол-во связей target node" << endl;
-		}
-		else {
-			//cout << "Подключено" << endl;
-			m_connected_to.push_back(target_node->m_name);
-			target_node->m_connected_in.push_back(m_name);
-		}
-	}
-
-	void disconnect(Node* target_node) {
-		//cout << "Отключено" << endl;
-
-		auto it1 = remove(
-			m_connected_to.begin(), m_connected_to.end(), target_node->m_name
-		);
-		m_connected_to.erase(it1, m_connected_to.end());
-
-		auto it2 = remove(
-			target_node->m_connected_in.begin(), target_node->m_connected_in.end(), m_name
-		);
-		target_node->m_connected_in.erase(it2, target_node->m_connected_in.end());
-
-	}
-
-	void which_connected() {
-		for (int r = 0; r < m_connected_in.size(); r++) {
-			cout << m_connected_in[r] << ", ";
-		}
-	}
-
-	void to_which_connected() {
-		for (int r = 0; r < m_connected_to.size(); r++) {
-			cout << m_connected_to[r] << ", ";
-		}
-	}
-
-	void set_value(int value) {
-		m_value = value;
-	}
-
-	void get_value() {
-		cout << m_value << endl;
-	}
-
-	void node_info() {
-		cout << "Узел: " << m_name << endl;
-		cout << "Значение: " << m_value << endl;
-		cout << "К кому подключен: "; to_which_connected(); cout << endl;
-		cout << "Кто подключен: "; which_connected(); cout << endl;
-	}
+	void connect(Node* target_node);
+	void disconnect(Node* target_node);
+	void which_connected();
+	void to_which_connected();
+	void set_value(const int &value);
+	void get_value();
+	void node_info();
 };
+
+
+void Node::connect(Node* target_node) {
+	if (m_connected_to.size() >= MAX_CONNECTED_TO) {
+		cerr << "Превышено кол-во связей self node" << endl;
+	}
+	else if (target_node->m_connected_in.size() >= MAX_CONNECTED_IN) {
+		cerr << "Превышено кол-во связей target node" << endl;
+	}
+	else {
+		//cout << "Подключено" << endl;
+		m_connected_to.push_back(target_node->m_name);
+		target_node->m_connected_in.push_back(m_name);
+	}
+}
+
+void Node::disconnect(Node* target_node) {
+	//cout << "Отключено" << endl;
+
+	auto it1 = remove(
+		m_connected_to.begin(), m_connected_to.end(), target_node->m_name
+	);
+	m_connected_to.erase(it1, m_connected_to.end());
+
+	auto it2 = remove(
+		target_node->m_connected_in.begin(), target_node->m_connected_in.end(), m_name
+	);
+	target_node->m_connected_in.erase(it2, target_node->m_connected_in.end());
+
+}
+
+void Node::which_connected() {
+	for (int r = 0; r < m_connected_in.size(); r++) {
+		cout << m_connected_in[r] << ", ";
+	}
+}
+
+void Node::to_which_connected() {
+	for (int r = 0; r < m_connected_to.size(); r++) {
+		cout << m_connected_to[r] << ", ";
+	}
+}
+
+void Node::set_value(const int &value) {
+	m_value = value;
+}
+
+void Node::get_value() {
+	cout << m_value << endl;
+}
+
+void Node::node_info() {
+	cout << "Узел: " << m_name << endl;
+	cout << "Значение: " << m_value << endl;
+	cout << "К кому подключен: "; to_which_connected(); cout << endl;
+	cout << "Кто подключен: "; which_connected(); cout << endl;
+}
+
 
 int main() {
 	setlocale(0, "Rus");
