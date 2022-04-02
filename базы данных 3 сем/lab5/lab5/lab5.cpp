@@ -38,14 +38,14 @@ public:
 			cerr << "Превышено кол-во связей target node" << endl;
 		}
 		else {
-			cout << "Подключено" << endl;
+			//cout << "Подключено" << endl;
 			m_connected_to.push_back(target_node->m_name);
 			target_node->m_connected_in.push_back(m_name);
 		}
 	}
 
 	void disconnect(Node* target_node) {
-		cout << "Отключено" << endl;
+		//cout << "Отключено" << endl;
 
 		auto it1 = remove(
 			m_connected_to.begin(), m_connected_to.end(), target_node->m_name
@@ -60,19 +60,15 @@ public:
 	}
 
 	void which_connected() {
-		cout << "Кто подключен: ";
 		for (int r = 0; r < m_connected_in.size(); r++) {
 			cout << m_connected_in[r] << ", ";
 		}
-		cout << endl;
 	}
 
 	void to_which_connected() {
-		cout << "К кому подключен: ";
 		for (int r = 0; r < m_connected_to.size(); r++) {
 			cout << m_connected_to[r] << ", ";
 		}
-		cout << endl;
 	}
 
 	void set_value(int value) {
@@ -83,6 +79,12 @@ public:
 		cout << m_value << endl;
 	}
 
+	void node_info() {
+		cout << "Узел: " << m_name << endl;
+		cout << "Значение: " << m_value << endl;
+		cout << "К кому подключен: "; to_which_connected(); cout << endl;
+		cout << "Кто подключен: "; which_connected(); cout << endl;
+	}
 };
 
 int main() {
@@ -94,14 +96,9 @@ int main() {
 	Node node4("node4", 20);
 
 	node2.connect(&node1);
+	node3.connect(&node2);
 
-	node1.which_connected();
-	node2.to_which_connected();
+	node2.set_value(50);
 
-	node2.disconnect(&node1);
-
-	node1.which_connected();
-	node2.to_which_connected();
-
-	node1.get_value();
+	node2.node_info();
 }
