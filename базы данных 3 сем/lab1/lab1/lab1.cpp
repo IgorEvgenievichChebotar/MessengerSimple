@@ -2,7 +2,7 @@
 using namespace std;
 
 
-void selectionSort(int data[], int len)
+void selection_sort(int data[], const int len)
 {
     int j = 0;
     int tmp = 0;
@@ -19,7 +19,7 @@ void selectionSort(int data[], int len)
     }
 }
 
-void bubbleSort(int data[], int len)
+void bubble_sort(int data[], const int len)
 {
     int tmp = 0;
     for (int i = 0; i < len; i++) {
@@ -33,7 +33,7 @@ void bubbleSort(int data[], int len)
     }
 }
 
-void insertionSort(int data[], int len)
+void insertion_sort(int data[], const int len)
 {
     int key = 0;
     int i = 0;
@@ -49,7 +49,7 @@ void insertionSort(int data[], int len)
 
 }
 
-void print(int data[], int len) {
+void print(int data[], const int len) {
     for (int i = 0; i < len; i++)
     {
         cout << data[i] << " ";
@@ -63,7 +63,7 @@ int main()
     int len;
     cin >> len;
     cout << "Введите массив (список):" << endl;
-    int data[100];
+    int data[100]{};
     for (int i = 0; i < len; i++)
     {
         cin >> data[i];
@@ -74,17 +74,17 @@ int main()
     cin >> sel;
     switch (sel) {
     case (1):
-        selectionSort(data, len);
+        selection_sort(data, len);
         cout << "Результат: ";
         print(data, len);
         break;
     case (2):
-        bubbleSort(data, len);
+        bubble_sort(data, len);
         cout << "Результат: ";
         print(data, len);
         break;
     case (3):
-        insertionSort(data, len);
+        insertion_sort(data, len);
         cout << "Результат: ";
         print(data, len);
         break;

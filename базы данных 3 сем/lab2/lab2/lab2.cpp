@@ -1,12 +1,12 @@
 ﻿#include <iostream> 
-#define NMAX 10
+constexpr auto nmax = 10;
 using namespace std;
 
 struct Stack {
-    int arr[NMAX]{};
+    int arr[nmax]{};
     int head = -1;   //Индекс крайнего элемента.
 
-    void push(int x) {
+    void push(const int x) {
         head++;
         arr[head] = x;
         cout << "Добавлен элемент: " << x << endl;
@@ -22,9 +22,11 @@ struct Stack {
         else {
             cout << "Ошибка, попытка извлечь элемент из пустого стека" << endl;
         }
+        return 0;
     }
 
-    bool is_empty() {
+    bool is_empty() const
+    {
         return head == -1;
     }
 
@@ -39,14 +41,14 @@ struct Stack {
 };
 
 struct Deque {
-    int arr[NMAX]{};
+    int arr[nmax]{};
 
     //Используя такие начальные значения индексов, у нас
     //будет свободная память как слева, так и справа.
-    int head = NMAX / 2;    //Индекс первого элемента.
-    int tail = NMAX / 2;    //Индекс элемента, следующего за последним.
+    int head = nmax / 2;    //Индекс первого элемента.
+    int tail = nmax / 2;    //Индекс элемента, следующего за последним.
 
-    void push_front(int x) {
+    void push_front(const int x) {
         head--;
         arr[head] = x;
         cout << "Добавлен элемент " << x << endl;
@@ -69,6 +71,7 @@ struct Deque {
             cout << "На месте " << tail << " элемента нет" << endl;
             tail--;
         }
+        return 0;
     }
 
     int pop_back() {
@@ -82,16 +85,18 @@ struct Deque {
             cout << "На месте " << tail << " элемента нет" << endl;
             tail--;
         }
+        return 0;
     }
 
-    bool is_empty() {
+    bool is_empty() const
+    {
         return head == tail;
     }
 
     void display()
     {
         cout << "Дек: ";
-        for (int n : arr)
+        for (const int &n : arr)
             cout << n << "  ";
         cout << endl;
 
@@ -104,7 +109,7 @@ struct Deque {
 Deque Deque::operator=(Stack& stk) {
     cout << "Стек преобразован в дек" << endl;
     int i = 0;
-    for (int stk_elem : stk.arr) {
+    for (const int &stk_elem : stk.arr) {
         arr[i++] = stk_elem;
     }
     return *this;

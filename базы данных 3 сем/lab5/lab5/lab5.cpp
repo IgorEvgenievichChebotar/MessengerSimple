@@ -3,107 +3,116 @@
 #include <vector>
 using namespace std;
 
-constexpr int MAX_CONNECTED_IN = 6; // максимальное кол-во связей К ЭТОМУ элементу
-constexpr int MAX_CONNECTED_TO = 1; // максимальное кол-во связей ОТ ЭТОГО элемента
+/**
+ * \brief максимальное кол-во связей К ЭТОМУ элементу
+ */
+constexpr int max_connected_in = 6;
+/**
+ * \brief максимальное кол-во связей ОТ ЭТОГО элемента
+ */
+constexpr int max_connected_to = 1;
 
-class Node {
+class node {
 private:
 
-	int value = 0;
-	string name = "node";
-	vector <string> connected_to;
-	vector <string> connected_in;
+	int value_ = 0;
+	string name_ = "node";
+	vector <string> connected_to_;
+	vector <string> connected_in_;
 
 public:
-
-	Node(string name) {
-		this->name = name;
+	explicit node(string name) : name_(std::move(name))
+	{
 	}
 
-	Node(int value, string name) {
-		this->value = value;
-		this->name = name;
+	node(const int value, string name) : value_(value), name_(std::move(name))
+	{
 	}
 
-	Node(string name, int value) {
-		this->value = value;
-		this->name = name;
+	node(string name, const int value) : value_(value), name_(std::move(name))
+	{
 	}
 
-	void connect(Node* target_node);
-	void disconnect(Node* target_node);
-	void which_connected();
-	void to_which_connected();
+	void connect(node* target_node);
+	void disconnect(node* target_node);
+	void which_connected() const;
+	void to_which_connected() const;
 	void set_value(const int &value);
-	void get_value();
-	void node_info();
+	void get_value() const;
+	void node_info() const;
+
 };
 
 
-void Node::connect(Node* target_node) {
-	if (this->connected_to.size() >= MAX_CONNECTED_TO) {
+void node::connect(node* target_node) {
+	if (this->connected_to_.size() >= max_connected_to) {
 		cerr << "Превышено кол-во связей self node" << endl;
 	}
-	else if (target_node->connected_in.size() >= MAX_CONNECTED_IN) {
+	else if (target_node->connected_in_.size() >= max_connected_in) {
 		cerr << "Превышено кол-во связей target node" << endl;
 	}
 	else {
-		//cout << "Подключено" << endl;
-		this->connected_to.push_back(target_node->name);
-		target_node->connected_in.push_back(name);
+		this->connected_to_.push_back(target_node->name_);
+		target_node->connected_in_.push_back(name_);
 	}
 }
 
-void Node::disconnect(Node* target_node) {
-	//cout << "Отключено" << endl;
+void node::disconnect(node* target_node) {
 
-	auto it1 = remove(
-		this->connected_to.begin(), this->connected_to.end(), target_node->name
+	const auto it1 = remove(
+		this->connected_to_.begin(), this->connected_to_.end(), target_node->name_
 	);
-	this->connected_to.erase(it1, this->connected_to.end());
+	this->connected_to_.erase(it1, this->connected_to_.end());
 
-	auto it2 = remove(
-		target_node->connected_in.begin(), target_node->connected_in.end(), this->name
+	const auto it2 = remove(
+		target_node->connected_in_.begin(), target_node->connected_in_.end(), this->name_
 	);
-	target_node->connected_in.erase(it2, target_node->connected_in.end());
+	target_node->connected_in_.erase(it2, target_node->connected_in_.end());
 
 }
 
-void Node::which_connected() {
-	for (int r = 0; r < this->connected_in.size(); r++) {
-		cout << this->connected_in[r] << ", ";
+void node::which_connected() const
+{
+	for (const auto& r : this->connected_in_)
+	{
+		cout << r << ", ";
 	}
 }
 
-void Node::to_which_connected() {
-	for (int r = 0; r < this->connected_to.size(); r++) {
-		cout << this->connected_to[r] << ", ";
+void node::to_which_connected() const
+{
+	for (const auto& r : this->connected_to_)
+	{
+		cout << r << ", ";
 	}
 }
 
-void Node::set_value(const int &value) {
-	this->value = value;
+void node::set_value(const int& value)
+{
+	this->value_ = value;
 }
 
-void Node::get_value() {
-	cout << this->value << endl;
+void node::get_value() const
+{
+	cout << this->value_ << endl;
 }
 
-void Node::node_info() {
-	cout << "Узел: " << this->name << endl;
-	cout << "Значение: " << this->value << endl;
+void node::node_info() const
+{
+	cout << "Узел: " << this->name_ << endl;
+	cout << "Значение: " << this->value_ << endl;
 	cout << "К кому подключен: "; to_which_connected(); cout << endl;
 	cout << "Кто подключен: "; which_connected(); cout << endl;
 }
 
-
 int main() {
 	setlocale(0, "Rus");
 
-	Node node1(10, "node1");
-	Node node2("node2");
-	Node node3("node3");
-	Node node4("node4", 20);
+	node node1(10, "node1");
+	node node2("node2");
+	node node3("node3");
+	node node4("node4", 20);
+	node node5("node5", 25);
 
 	node2.connect(&node1);
 	node3.connect(&node2);
@@ -111,4 +120,6 @@ int main() {
 	node2.set_value(50);
 
 	node2.node_info();
+
 }
+
