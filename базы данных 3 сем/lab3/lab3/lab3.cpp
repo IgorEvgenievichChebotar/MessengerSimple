@@ -11,54 +11,56 @@ public:
     void push_front(T data);//Добавление элемента в начало
     void pop_back();//Удалить последний элемент
     void pop_front();//Удалить первый элемент
-    int get_size() {
-        return size;
+    int get_size() const
+    {
+        return size_;
     }//Количество элементов в списке
     T& operator[](const int index);//Определение индекса элемента
     void clear_line();//Удалить строку полностью
     void insert(T value, int index);//Добавление элемента на указанную позицию
-    void removeAt(int index);//Удаление элемента с указанной позиции
+    void remove_at(int index);//Удаление элемента с указанной позиции
     
 
 private:
-    template<typename T>
+    template<typename T1>
     class Node {
     public:
         Node* pNext;
-        T data;
-        Node(T data = T(), Node* pNext = nullptr)/*pNext=nullptr*/ {
+        T1 data;
+
+        explicit Node(T1 data = T1(), Node* p_next = nullptr)/*pNext=nullptr*/ {
             this->data = data;
-            this->pNext = pNext;
+            this->pNext = p_next;
         }
     };
-    int size;
-    Node<T>* head;
+    int size_;
+    Node<T>* head_;
 };
 
 template<typename T>
-List<T>::List() {
-    size = 0;
-    head = nullptr;
+List<T>::List() : size_(0), head_(nullptr)
+{
 }
 
 template <typename T>
 void List <T> ::push_back(T data) {
-    if (head == nullptr) {
-        head = new Node<T>(data);
+    if (head_ == nullptr) {
+        head_ = new Node<T>(data);
     }
     else {
-        Node<T>* current = this->head;
+        Node<T>* current = this->head_;
         while (current->pNext != nullptr) {
             current = current->pNext;
         }
         current->pNext = new Node<T>(data);
     }
-    size++;
+    size_++;
 }
 template <typename T>
-T& List<T>::operator[](const int index) {
+T& List<T>::operator[](const int index)
+{
     int counter = 0;
-    Node<T>* current = this->head;
+    Node<T>* current = this->head_;
     while (current != nullptr) {
         if (counter == index) {
             return current->data;
@@ -69,60 +71,60 @@ T& List<T>::operator[](const int index) {
 }
 template<typename T>
 void List<T>::pop_front() {
-    Node<T>* temp = head;
-    head = head->pNext;
+	const Node<T>* temp = head_;
+    head_ = head_->pNext;
     delete[] temp;
-    size--;
+    size_--;
 }
 
 template<typename T>
 void List<T>::clear_line() {
-    while (size > 0) {
+    while (size_ > 0) {
         pop_front();
     }
 }
 template<typename T>
 void List<T>::push_front(T data) {
-    head = new Node<T>(data, head);
-    size++;
+    head_ = new Node<T>(data, head_);
+    size_++;
 }
 
 template<typename T>
-void List<T>::insert(T value, int index) {
+void List<T>::insert(T value, const int index) {
     if (index == 0) {
         push_front(value);
     }
     else {
-        Node<T>* previous = this->head;
+        Node<T>* previous = this->head_;
         for (int i = 0; i < index - 1; i++) {
             previous = previous->pNext;
         }
-        Node<T>* newNode = new Node<T>(value, previous->pNext);
-        previous->pNext = newNode;
-        size++;
+        auto* new_node = new Node<T>(value, previous->pNext);
+        previous->pNext = new_node;
+        size_++;
     }
 }
 
 template<typename T>
-void List<T>::removeAt(int index) {
+void List<T>::remove_at(const int index) {
     if (index == 0) {
         pop_front();
     }
     else {
-        Node<T>* previous = this->head;
+        Node<T>* previous = this->head_;
         for (int i = 0; i < index - 1; i++) {
             previous = previous->pNext;
         }
-        Node<T>* toDelete = previous->pNext;
-        previous->pNext = toDelete->pNext;
-        delete toDelete;
-        size--;
+        Node<T>* to_delete = previous->pNext;
+        previous->pNext = to_delete->pNext;
+        delete to_delete;
+        size_--;
     }
 }
 
 template<typename T>
 void List<T>::pop_back() {
-    removeAt(size - 1);
+    remove_at(size_ - 1);
 }
 
 template<typename T>
@@ -136,15 +138,13 @@ int main()
     cout << "Введите количество строк" << endl;
     int raws;
     cin >> raws;
-    List<int>* arr = new List<int>[raws];
+    auto* arr = new List<int>[raws];
     for (int i = 0; i < raws; i++) {
-        List<int> lst;
+	    const List<int> lst;
         arr[i] = lst;
     }
-    string choice1;
-    string choice2;
-    choice2 = "y";
-    choice1 = "y";
+    string choice2 = "y";
+    string choice1 = "y";
     while (choice1 == "y") {
         cout << "Выберите строку" << endl;
         for (int i = 1; i <= raws; i++) {
@@ -166,10 +166,11 @@ int main()
             cout << "6. Удалить элемент из выбранной позиции" << endl;
             cout << "7. Вывести количество элементов списка" << endl;
             int chase;
-            int n;
             cin >> chase;
-            int index;
             switch (chase) {
+	            int index;
+	            int n;
+
             case 1:
                 cout << "Введите число для вставки" << endl;
                 cin >> n;
@@ -213,18 +214,13 @@ int main()
                 cout << "Введите позицию для удаления" << endl;
                 cin >> index;
 
-                arr[raw - 1].removeAt(index);
+                arr[raw - 1].remove_at(index);
                 for (int i = 0; i < arr[raw - 1].get_size(); i++) {
                     cout << arr[raw - 1][i] << " ";
                 }
                 break;
             default:
-                arr[raw - 1].get_size();
-                cout << endl;
-                for (int i = 0; i < arr[raw - 1].get_size(); i++) {
-                    cout << arr[raw - 1][i] << " ";
-                }
-                break;
+                return arr[raw - 1].get_size();
             }
             cout << "Желаете продолжить с этой строкой?" << endl;
             cin >> choice2;

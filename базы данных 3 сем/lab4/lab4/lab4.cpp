@@ -7,10 +7,20 @@ struct node {
 	node* right;
 };
 
-class btree {
+class Btree {
+private:
+	node* root_;
+
+	void destroy_tree(node* leaf);
+	void insert(int key, node* leaf);
+	node* search(int key, node* leaf);
+	void inorder_print(node* leaf);
+	void postorder_print(node* leaf);
+	void preorder_print(node* leaf);
+
 public:
-	btree();
-	~btree();
+	Btree();
+	~Btree();
 
 	void insert(int key);
 	node* search(int key);
@@ -19,27 +29,18 @@ public:
 	void postorder_print();
 	void preorder_print();
 
-private:
-	void destroy_tree(node* leaf);
-	void insert(int key, node* leaf);
-	node* search(int key, node* leaf);
-	void inorder_print(node* leaf);
-	void postorder_print(node* leaf);
-	void preorder_print(node* leaf);
-
-	node* root_;
 };
 
 
-btree::btree() : root_(nullptr)
+Btree::Btree() : root_(nullptr)
 {
 }
 
-btree::~btree() {
+Btree::~Btree() {
 	destroy_tree();
 }
 
-void btree::destroy_tree(node* leaf) {
+void Btree::destroy_tree(node* leaf) {
 	if (leaf != nullptr) {
 		destroy_tree(leaf->left);
 		destroy_tree(leaf->right);
@@ -47,7 +48,7 @@ void btree::destroy_tree(node* leaf) {
 	}
 }
 
-void btree::insert(const int key, node* leaf) {
+void Btree::insert(const int key, node* leaf) {
 
 	if (key < leaf->value) {
 		if (leaf->left != nullptr) {
@@ -74,7 +75,7 @@ void btree::insert(const int key, node* leaf) {
 
 }
 
-void btree::insert(const int key) {
+void Btree::insert(const int key) {
 	if (root_ != nullptr) {
 		insert(key, root_);
 	}
@@ -86,7 +87,7 @@ void btree::insert(const int key) {
 	}
 }
 
-node* btree::search(const int key, node* leaf) {
+node* Btree::search(const int key, node* leaf) {
 	if (leaf != nullptr) {
 		if (key == leaf->value) {
 			return leaf;
@@ -103,20 +104,20 @@ node* btree::search(const int key, node* leaf) {
 	}
 }
 
-node* btree::search(const int key) {
+node* Btree::search(const int key) {
 	return search(key, root_);
 }
 
-void btree::destroy_tree() {
+void Btree::destroy_tree() {
 	destroy_tree(root_);
 }
 
-void btree::inorder_print() {
+void Btree::inorder_print() {
 	inorder_print(root_);
 	cout << "\n";
 }
 
-void btree::inorder_print(node* leaf) {
+void Btree::inorder_print(node* leaf) {
 	if (leaf != nullptr) {
 		inorder_print(leaf->left);
 		cout << leaf->value << ",";
@@ -124,12 +125,12 @@ void btree::inorder_print(node* leaf) {
 	}
 }
 
-void btree::postorder_print() {
+void Btree::postorder_print() {
 	postorder_print(root_);
 	cout << "\n";
 }
 
-void btree::postorder_print(node* leaf) {
+void Btree::postorder_print(node* leaf) {
 	if (leaf != nullptr) {
 		inorder_print(leaf->left);
 		inorder_print(leaf->right);
@@ -137,12 +138,12 @@ void btree::postorder_print(node* leaf) {
 	}
 }
 
-void btree::preorder_print() {
+void Btree::preorder_print() {
 	preorder_print(root_);
 	cout << "\n";
 }
 
-void btree::preorder_print(node* leaf) {
+void Btree::preorder_print(node* leaf) {
 	if (leaf != nullptr) {
 		cout << leaf->value << ",";
 		inorder_print(leaf->left);
@@ -152,8 +153,8 @@ void btree::preorder_print(node* leaf) {
 
 int main() {
 
-	//btree tree;
-	auto* tree = new btree();
+	//Btree tree;
+	auto* tree = new Btree();
 
 	tree->insert(10);
 	tree->insert(6);
